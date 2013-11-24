@@ -1,8 +1,32 @@
 PyTeaser
 ========
 
-PyTeaser is based on the TextTeaser project written in Scala by Mojojolo. It's completely re-written in Python.
+PyTeaser is based on the [TextTeaser](https://github.com/MojoJolo/textteaser) project written in Scala by Mojojolo. It's completely re-written in Python
+to make it more accessible.
 
 The aim of PyTeaser is is to take any news article and extract a brief summary from it.
 
 
+# Requirements:
+
+PyTeaser requires [Python-Goose](https://github.com/grangier/python-goose).
+
+# Use:
+## sample command:
+```Python
+>>> from pyteaser import Summarize
+>>> url = 'http://www.huffingtonpost.com/2013/11/22/twitter-forward-secrecy_n_4326599.html'
+>>> summaries = Summarize(url)
+>>> print summaries
+
+```
+
+## output
+```
+[
+  'Twitter\'s move is the latest response from U.S. Internet firms following disclosures by former spy agency contractor Edward Snowden about widespread, classified U.S. government surveillance programs.', 
+  'Since then, it has become clearer and clearer how important that step was to protecting our users\' privacy.', 'The online messaging service, which began scrambling communications in 2011 using traditional HTTPS encryption, said on Friday it has added an advanced layer of protection for HTTPS known as "forward secrecy.', 
+  '"A year and a half ago, Twitter was first served completely over HTTPS," the company said in a blog posting.', 'By Jim Finkle (Reuters) - Twitter Inc said it has implemented a security technology that makes it harder to spy on its users and called on other Internet firms to do the same, as Web providers look to thwart spying by government intelligence agencies.'
+]
+
+```
