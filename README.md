@@ -1,15 +1,15 @@
 PyTeaser
 ========
 
-PyTeaser is based on the [TextTeaser](https://github.com/MojoJolo/textteaser) project written in Scala by Mojojolo. It's completely re-written in Python
-to make it more accessible.
+PyTeaser is based on the original [TextTeaser](https://github.com/MojoJolo/textteaser) project written in Scala by Mojojolo. It's completely re-written in Python.
 
 The aim of PyTeaser is is to take any news article and extract a brief summary from it.
 
 
 # Requirements:
 
-PyTeaser requires [Python-Goose](https://github.com/grangier/python-goose).
+PyTeaser requires [Python-Goose](https://github.com/grangier/python-goose) to extract text and other meta information
+from an url.
 
 # Use:
 ## sample command:
