@@ -8,15 +8,21 @@ The aim of PyTeaser is is to take any news article and extract a brief summary f
 
 # Requirements:
 
-PyTeaser requires [Python-Goose](https://github.com/grangier/python-goose) to extract text and other meta information
-from an url.
+Install [nltk](http://nltk.org/install.html) to split sentences.
+
+(Optional) Install [Python-Goose](https://github.com/grangier/python-goose) to extract text and other meta information
+from an url (Only if you want to use SummarizeUrl).
+
+
+
+
 
 # Use:
 ## sample command:
 ```Python
->>> from pyteaser import Summarize
+>>> from pyteaser import SummarizeUrl
 >>> url = 'http://www.huffingtonpost.com/2013/11/22/twitter-forward-secrecy_n_4326599.html'
->>> summaries = Summarize(url)
+>>> summaries = SummarizeUrl(url)
 >>> print summaries
 
 ```
@@ -32,3 +38,9 @@ from an url.
 ]
 
 ```
+
+you can use Summarize(title, text) directly if you have those available already. Otherwise you must install Python Goose to extract text from url.
+
+
+#todo:
+- Remove dependency on Python nltk because it's annoying to install
