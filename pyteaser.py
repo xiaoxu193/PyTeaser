@@ -23,6 +23,7 @@ def SummarizeUrl(url):
 	return summaries
 
 def Summarize(title, text):
+	summaries = []
 	sentences = split_sentences(text)
 	keys =  keywords(text)
 	titleWords = split_words(title)
