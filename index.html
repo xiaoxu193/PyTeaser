@@ -36,14 +36,19 @@
 
 <p>PyTeaser is based on the original <a href="https://github.com/MojoJolo/textteaser">TextTeaser</a> project written in Scala by Mojojolo. It's completely re-written in Python.</p>
 
-<p>The aim of PyTeaser is is to take any news article and extract a brief summary from it.</p>
+<p>The aim of PyTeaser is to take any news article and extract a brief summary from it.</p>
 
-<h1>
+<p>It does so by ranking sentences in a news article according to how relevant they are to the entire text. The top 5 sentences are used to form a "summary". Each sentence is ranked by using four criteria:</p>
+
+<ul>
+<li>Relevance to the title</li>
+<li>Relevance to keywords in the article</li>
+<li>Position of the sentence</li>
+<li>Length of the sentence</li>
+</ul><h1>
 <a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements:</h1>
 
-<p>Install <a href="http://nltk.org/install.html">nltk</a> to split sentences.</p>
-
-<p>(Optional) Install <a href="https://github.com/grangier/python-goose">Python-Goose</a> to extract text and other meta information
+<p>Install <a href="https://github.com/grangier/python-goose">Python-Goose</a> to extract text and other meta information
 from an url (Only if you want to use SummarizeUrl).</p>
 
 <h1>
@@ -72,13 +77,14 @@ from an url (Only if you want to use SummarizeUrl).</p>
 
 </code></pre>
 
-<p>you can use Summarize(title, text) directly if you have those available already. Otherwise you must install Python Goose to extract text from url.</p>
+<p>you can use Summarize(title, text) directly if you already have the text and the title. Otherwise you must install Python Goose to extract text from url.</p>
 
 <h1>
 <a name="todo" class="anchor" href="#todo"><span class="octicon octicon-link"></span></a>todo:</h1>
 
 <ul>
-<li>Remove dependency on Python nltk because it's annoying to install</li>
+<li>Create setup file for Python Goose installation OR:</li>
+<li>Remove Python Goose installation dependency by integrating the code into the program</li>
 </ul>
         </section>
 
