@@ -3,17 +3,20 @@ PyTeaser
 
 PyTeaser is based on the original [TextTeaser](https://github.com/MojoJolo/textteaser) project written in Scala by Mojojolo. It's completely re-written in Python.
 
-The aim of PyTeaser is is to take any news article and extract a brief summary from it.
+The aim of PyTeaser is to take any news article and extract a brief summary from it.
+
+It does so by ranking sentences in a news article according to how relevant they are to the entire text. The top 5 sentences are used to form a "summary". Each sentence is ranked by using four criteria:
+
+- Relevance to the title
+- Relevance to keywords in the article
+- Position of the sentence
+- Length of the sentence
 
 
 # Requirements:
 
-Install [nltk](http://nltk.org/install.html) to split sentences.
-
-(Optional) Install [Python-Goose](https://github.com/grangier/python-goose) to extract text and other meta information
+Install [Python-Goose](https://github.com/grangier/python-goose) to extract text and other meta information
 from an url (Only if you want to use SummarizeUrl).
-
-
 
 
 
@@ -39,8 +42,9 @@ from an url (Only if you want to use SummarizeUrl).
 
 ```
 
-you can use Summarize(title, text) directly if you have those available already. Otherwise you must install Python Goose to extract text from url.
+you can use Summarize(title, text) directly if you already have the text and the title. Otherwise you must install Python Goose to extract text from url.
 
 
 #todo:
-- Remove dependency on Python nltk because it's annoying to install
+- Create setup file for Python Goose installation OR:
+- Remove Python Goose installation dependency by integrating the code into the program
