@@ -43,8 +43,3 @@ from an url (Only if you want to use SummarizeUrl).
 ```
 
 you can use Summarize(title, text) directly if you already have the text and the title. Otherwise you must install Python Goose to extract text from url.
-
-
-#todo:
-- Create setup file for Python Goose installation OR:
-- Remove Python Goose installation dependency by integrating the code into the program
