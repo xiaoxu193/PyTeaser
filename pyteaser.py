@@ -1,6 +1,6 @@
-import re  # regex
-import math
 from collections import Counter
+from math import fabs
+from re import split as regex_split, sub as regex_sub
 
 stopWords = [
     "-", " ", ",", ".", "a", "e", "i", "o", "u", "t", "about", "above",
@@ -135,7 +135,7 @@ def sbs(words, keywords):
     for word in words:
         if word in keywords:
             score += keywords[word]
-    return (1.0 / math.fabs(len(words)) * score)/10.0
+    return (1.0 / fabs(len(words)) * score)/10.0
 
 
 def dbs(words, keywords):
@@ -165,7 +165,7 @@ def dbs(words, keywords):
 def split_words(text):
     #split a string into array of words
     try:
-        text = re.sub(r'[^\w ]', '', text)  # strip special chars
+        text = regex_sub(r'[^\w ]', '', text)  # strip special chars
         return [x.strip('.').lower() for x in text.split()]
     except TypeError:
         return None
@@ -178,7 +178,7 @@ def keywords(text):
     and sorts them in reverse natural order (so descending)
     by number of occurrences
     """
-    import operator  # for sorting
+    from operator import itemgetter  # for sorting
     text = split_words(text)
     numWords = len(text)  # of words before removing blacklist words
     text = [x for x in text if x not in stopWords]
@@ -194,7 +194,7 @@ def keywords(text):
         articleScore = keywords[k]*1.0 / numWords
         keywords[k] = articleScore * 1.5 + 1
 
-    keywords = sorted(keywords.iteritems(), key=operator.itemgetter(1))
+    keywords = sorted(keywords.iteritems(), key=itemgetter(1))
     keywords.reverse()
     return dict(keywords)
 
@@ -209,8 +209,8 @@ def split_sentences(text):
     of the line. Now, the s_iter list is formatted correctly but it is missing the last item of the sentences list. The
     second to last line adds this item to the s_iter list and the last line returns the full list.
     '''
-    import re
-    sentences = re.split('(?<![A-Z])([.!?]"?)(?=\s+\"?[A-Z])',text)
+    
+    sentences = regex_split('(?<![A-Z])([.!?]"?)(?=\s+\"?[A-Z])', text)
     s_iter = zip(*[iter(sentences[:-1])] * 2)
     s_iter = [''.join(map(str,y)).lstrip() for y in s_iter]
     s_iter.append(sentences[-1])
@@ -219,7 +219,7 @@ def split_sentences(text):
 
 
 def length_score(sentence):
-    return 1 - math.fabs(ideal - len(sentence)) / ideal
+    return 1 - fabs(ideal - len(sentence)) / ideal
 
 
 def title_score(title, sentence):
@@ -258,11 +258,3 @@ def sentence_position(i, size):
         return 0.15
     else:
         return 0
-
-
-def main():
-        from pyteaser import Summarize
-        Summarize('Framework for Partitioning and Execution of Data Stream Applications in Mobile Cloud Computing', 'The contribution of cloud computing and mobile computing technologies lead to the newly emerging mobile cloud com- puting paradigm. Three major approaches have been pro- posed for mobile cloud applications: 1) extending the access to cloud services to mobile devices; 2) enabling mobile de- vices to work collaboratively as cloud resource providers; 3) augmenting the execution of mobile applications on portable devices using cloud resources. In this paper, we focus on the third approach in supporting mobile data stream applica- tions. More specifically, we study how to optimize the com- putation partitioning of a data stream application between mobile and cloud to achieve maximum speed/throughput in processing the streaming data. To the best of our knowledge, it is the first work to study the partitioning problem for mobile data stream applica- tions, where the optimization is placed on achieving high throughput of processing the streaming data rather than minimizing the makespan of executions as in other appli- cations. We first propose a framework to provide runtime support for the dynamic computation partitioning and exe- cution of the application. Different from existing works, the framework not only allows the dynamic partitioning for a single user but also supports the sharing of computation in- stances among multiple users in the cloud to achieve efficient utilization of the underlying cloud resources. Meanwhile, the framework has better scalability because it is designed on the elastic cloud fabrics. Based on the framework, we design a genetic algorithm for optimal computation parti- tion. Both numerical evaluation and real world experiment have been performed, and the results show that the par- titioned application can achieve at least two times better performance in terms of throughput than the application without partitioning.')
-
-if __name__ == "__main__":
-        main()
