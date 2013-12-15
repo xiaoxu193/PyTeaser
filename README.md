@@ -1,11 +1,10 @@
 PyTeaser
 ========
 
-PyTeaser is based on the original [TextTeaser](https://github.com/MojoJolo/textteaser) project written in Scala by Mojojolo. It's completely re-written in Python.
+PyTeaser takes any news article and extract a brief summary from it. It's based on the original [Scala](https://github.com/MojoJolo/textteaser) project written.
 
-The aim of PyTeaser is to take any news article and extract a brief summary from it.
 
-It does so by ranking sentences in a news article according to how relevant they are to the entire text. The top 5 sentences are used to form a "summary". Each sentence is ranked by using four criteria:
+Summaries are created by ranking sentences in a news article according to how relevant they are to the entire text. The top 5 sentences are used to form a "summary". Each sentence is ranked by using four criteria:
 
 - Relevance to the title
 - Relevance to keywords in the article
@@ -13,14 +12,15 @@ It does so by ranking sentences in a news article according to how relevant they
 - Length of the sentence
 
 
-# Requirements:
+# Installation:
 
-Install [Python-Goose](https://github.com/grangier/python-goose) to extract text and other meta information
-from an url (Only if you want to use SummarizeUrl).
+```
+pip install pyteaser
+```
 
 
 
-# Use:
+# Usage:
 ## sample command:
 ```Python
 >>> from pyteaser import SummarizeUrl
