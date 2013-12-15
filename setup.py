@@ -3,16 +3,17 @@ try:
 except ImportError:
     from distutils.core import setup
 
-with open('README.md') as file:
-    long_description = file.read()
+
 
 setup(name='pyteaser',
       version='1.0',
-      description="PyTeaser is based on the original TextTeaser project written in Scala by Mojojolo. It's completely re-written in Python.",
-      long_description=long_description,
+      description="PyTeaser takes any news article and extract a brief summary from it",
       license='MIT',
       install_requires=['Pillow', 'lxml', 'cssselect', 'jieba', 'beautifulsoup'],
       packages=find_packages(),
       py_modules=['pyteaser'],
       package_data={'goose': ['resources/images/*', 'resources/text/*']},
+      author = 'Xiao Xu',
+      author_email = 'xx56@cornell.edu',
+      url = 'https://github.com/xiaoxu193/PyTeaser',
       test_suite='tests')
