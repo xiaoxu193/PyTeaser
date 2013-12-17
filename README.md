@@ -18,6 +18,13 @@ Summaries are created by ranking sentences in a news article according to how re
 pip install pyteaser
 ```
 
+Note: if you're installing on Windows, you have to install one of the dependency package lxml manually using:
+
+```
+easy_install lxml==2.3.3
+```
+
+More information about this issue here: https://github.com/xiaoxu193/PyTeaser/issues/17
 
 
 # Usage:
