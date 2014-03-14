@@ -87,6 +87,9 @@ def Summarize(title, text):
     keys = keywords(text)
     titleWords = split_words(title)
 
+    if len(sentences) <= 5:
+        return sentences
+
     #score setences, and use the top 5 sentences
     ranks = score(sentences, titleWords, keys).most_common(5)
     for rank in ranks:
