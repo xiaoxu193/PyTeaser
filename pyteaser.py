@@ -213,10 +213,10 @@ def split_sentences(text):
     second to last line adds this item to the s_iter list and the last line returns the full list.
     '''
     
-    sentences = regex_split('(?<![A-Z])([.!?]"?)(?=\s+\"?[A-Z])', text)
+    sentences = regex_split('(?<![A-Z])([.!?]"?)(?=\s+\".?[A-Z])', text)
     s_iter = zip(*[iter(sentences[:-1])] * 2)
     s_iter = [''.join(map(str,y)).lstrip() for y in s_iter]
-    s_iter.append(sentences[-1])
+    s_iter.append(sentences[-1].strip())
     return s_iter
 
 
