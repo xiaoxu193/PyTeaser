@@ -2,7 +2,7 @@ from collections import Counter
 from math import fabs
 from re import split as regex_split, sub as regex_sub
 
-stopWords = [
+stopWords = set([
     "-", " ", ",", ".", "a", "e", "i", "o", "u", "t", "about", "above",
     "above", "across", "after", "afterwards", "again", "against", "all",
     "almost", "alone", "along", "already", "also", "although", "always",
@@ -59,7 +59,7 @@ stopWords = [
     "january", "february", "march", "april", "may", "june", "july",
     "august", "september", "october", "november", "december",
     "philippine", "government", "police", "manila"
-]
+])
 ideal = 20.0
 
 
