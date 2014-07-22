@@ -239,25 +239,25 @@ def sentence_position(i, size):
     probability of being an important sentence"""
 
     normalized = i*1.0 / size
-    if normalized > 0 and normalized <= 0.1:
+    if 0 < normalized <= 0.1:
         return 0.17
-    elif normalized > 0.1 and normalized <= 0.2:
+    elif 0.1 < normalized <= 0.2:
         return 0.23
-    elif normalized > 0.2 and normalized <= 0.3:
+    elif 0.2 < normalized <= 0.3:
         return 0.14
-    elif normalized > 0.3 and normalized <= 0.4:
+    elif 0.3 < normalized <= 0.4:
         return 0.08
-    elif normalized > 0.4 and normalized <= 0.5:
+    elif 0.4 < normalized <= 0.5:
         return 0.05
-    elif normalized > 0.5 and normalized <= 0.6:
+    elif 0.5 < normalized <= 0.6:
         return 0.04
-    elif normalized > 0.6 and normalized <= 0.7:
+    elif 0.6 < normalized <= 0.7:
         return 0.06
-    elif normalized > 0.7 and normalized <= 0.8:
+    elif 0.7 < normalized <= 0.8:
         return 0.04
-    elif normalized > 0.8 and normalized <= 0.9:
+    elif 0.8 < normalized <= 0.9:
         return 0.04
-    elif normalized > 0.9 and normalized <= 1.0:
+    elif 0.9 < normalized <= 1.0:
         return 0.15
     else:
         return 0
