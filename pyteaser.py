@@ -1,6 +1,7 @@
+# coding=utf-8
 from collections import Counter
 from math import fabs
-from re import split as regex_split, sub as regex_sub
+from re import split as regex_split, sub as regex_sub, UNICODE as REGEX_UNICODE
 
 stopWords = set([
     "-", " ", ",", ".", "a", "e", "i", "o", "u", "t", "about", "above",
@@ -168,7 +169,7 @@ def dbs(words, keywords):
 def split_words(text):
     #split a string into array of words
     try:
-        text = regex_sub(r'[^\w ]', '', text)  # strip special chars
+        text = regex_sub(r'[^\w ]', '', text, flags=REGEX_UNICODE)  # strip special chars
         return [x.strip('.').lower() for x in text.split()]
     except TypeError:
         return None
@@ -213,7 +214,7 @@ def split_sentences(text):
     second to last line adds this item to the s_iter list and the last line returns the full list.
     '''
     
-    sentences = regex_split('(?<![A-Z])([.!?]"?)(?=\s+\"?[A-Z])', text)
+    sentences = regex_split(u'(?<![A-ZА-ЯЁ])([.!?]"?)(?=\s+\"?[A-ZА-ЯЁ])', text, flags=REGEX_UNICODE)
     s_iter = zip(*[iter(sentences[:-1])] * 2)
     s_iter = [''.join(map(unicode,y)).lstrip() for y in s_iter]
     s_iter.append(sentences[-1])
