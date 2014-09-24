@@ -178,29 +178,20 @@ def split_words(text):
 def keywords(text):
     """get the top 10 keywords and their frequency scores
     ignores blacklisted words in stopWords,
-    counts the number of occurrences of each word,
-    and sorts them in reverse natural order (so descending)
-    by number of occurrences
+    counts the number of occurrences of each word
     """
-    from operator import itemgetter  # for sorting
     text = split_words(text)
     numWords = len(text)  # of words before removing blacklist words
-    text = [x for x in text if x not in stopWords]
-    freq = Counter()
-    for word in text:
-        freq[word] += 1
+    freq = Counter(x for x in text if x not in stopWords)
 
-    minSize = min(10, len(freq))
-    keywords = tuple(freq.most_common(minSize))  # get first 10
-    keywords = dict((x, y) for x, y in keywords)  # recreate a dict
+    minSize = min(10, len(freq))  # get first 10
+    keywords = {x: y for x, y in freq.most_common(minSize)}  # recreate a dict
 
     for k in keywords:
         articleScore = keywords[k]*1.0 / numWords
         keywords[k] = articleScore * 1.5 + 1
 
-    keywords = sorted(keywords.iteritems(), key=itemgetter(1))
-    keywords.reverse()
-    return dict(keywords)
+    return keywords
 
 
 def split_sentences(text):
