@@ -76,9 +76,8 @@ def SummarizeUrl(url):
     if not article or not article.cleaned_text or not article.title:
         return None
 
-    text = str(article.cleaned_text.encode('utf-8', 'ignore'))
-    title = str(article.title.encode('utf-8', 'ignore'))
-    summaries = Summarize(title, text)
+    summaries = Summarize(unicode(article.title),
+                          unicode(article.cleaned_text))
     return summaries
 
 
