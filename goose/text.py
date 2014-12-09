@@ -30,9 +30,7 @@ from goose.utils import FileHelper
 from goose.utils.encoding import smart_unicode
 from goose.utils.encoding import smart_str
 from goose.utils.encoding import DjangoUnicodeDecodeError
-
 TABSSPACE = re.compile(r'[\s\t]+')
-
 
 def innerTrim(value):
     if isinstance(value, (unicode, str)):
@@ -106,7 +104,7 @@ class StopWords(object):
         # http://stackoverflow.com/questions/265960/best-way-to-strip-punctuation-from-a-string-in-python
         if isinstance(content, unicode):
             content = content.encode('utf-8')
-        return content.translate(self.TRANS_TABLE, string.punctuation)
+        return content.translate(self.TRANS_TABLE, string.punctuation).decode('utf-8')
 
     def candiate_words(self, stripped_input):
         return stripped_input.split(' ')

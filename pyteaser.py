@@ -74,7 +74,8 @@ def SummarizeUrl(url):
 
     #print ">>> " + str(high) + " - " + item['Source'] + " >>> " + highsen
     if not article or not article.cleaned_text or not article.title:
-        return None
+		print 'Article problem'
+		return None
 
     summaries = Summarize(unicode(article.title),
                           unicode(article.cleaned_text))
