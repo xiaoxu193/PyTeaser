@@ -50,3 +50,9 @@ More information about this issue here: https://github.com/xiaoxu193/PyTeaser/is
 ```
 
 you can use Summarize(title, text) directly if you already have the text and the title. Otherwise you must install Python Goose to extract text from url.
+
+If you have problems with encoding(happens with russian language), use
+```
+		article = Goose({'use_meta_language': False, 'target_language':'ru'}).extract(url=inurl)
+```
+in pyteaser.py
