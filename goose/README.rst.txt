@@ -138,7 +138,19 @@ Video extraction
     '476'
     >>> article.movies[0].height
     '357'
+    
 
+Goose in Russian
+----------------
+
+If you have problems with encoding(happens with russian language), use ```article = Goose({'use_meta_language': False, 'target_language':'ru'}).extract(url=inurl)``` in pyteaser.py  
+
+
+Also, you should 
+```
+.encode('utf8')
+```
+every sentence from SummarizeUrl(url), to avoid problems with unicode and russian language
 
 Goose in Chinese
 ----------------
