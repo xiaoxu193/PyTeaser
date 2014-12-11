@@ -1,38 +1,35 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <title>Pyteaser by xiaoxu193</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <title>Pyteaser by xiaoxu193</title>
   </head>
-
   <body>
-    <div id="container">
-      <div class="inner">
+    <div class="wrapper">
+      <header>
+        <h1>Pyteaser</h1>
+        <p>Summarizes news articles by providing an url</p>
 
-        <header>
-          <h1>Pyteaser</h1>
-          <h2>Summarizes news articles by providing an url</h2>
-        </header>
+        <p class="view"><a href="https://github.com/xiaoxu193/PyTeaser">View the Project on GitHub <small>xiaoxu193/PyTeaser</small></a></p>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/xiaoxu193/PyTeaser/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/xiaoxu193/PyTeaser/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/xiaoxu193/PyTeaser" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
 
-        <hr>
-
-        <section id="main_content">
-          <h1>
-<a name="pyteaser" class="anchor" href="#pyteaser"><span class="octicon octicon-link"></span></a>PyTeaser</h1>
+        <ul>
+          <li><a href="https://github.com/xiaoxu193/PyTeaser/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/xiaoxu193/PyTeaser/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/xiaoxu193/PyTeaser">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="pyteaser" class="anchor" href="#pyteaser" aria-hidden="true"><span class="octicon octicon-link"></span></a>PyTeaser</h1>
 
 <p>PyTeaser takes any news article and extract a brief summary from it. It's based on the original <a href="https://github.com/MojoJolo/textteaser">Scala</a> project.</p>
 
@@ -43,27 +40,35 @@
 <li>Relevance to keywords in the article</li>
 <li>Position of the sentence</li>
 <li>Length of the sentence</li>
-</ul><h1>
-<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation:</h1>
+</ul>
+
+<h1>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation:</h1>
 
 <pre><code>pip install pyteaser
 </code></pre>
 
+<p>Note: if you're installing on Windows, you have to install one of the dependency package lxml manually using:</p>
+
+<pre><code>easy_install lxml==2.3.3
+</code></pre>
+
+<p>More information about this issue here: <a href="https://github.com/xiaoxu193/PyTeaser/issues/17">https://github.com/xiaoxu193/PyTeaser/issues/17</a></p>
+
 <h1>
-<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage:</h1>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage:</h1>
 
 <h2>
-<a name="sample-command" class="anchor" href="#sample-command"><span class="octicon octicon-link"></span></a>sample command:</h2>
+<a id="sample-command" class="anchor" href="#sample-command" aria-hidden="true"><span class="octicon octicon-link"></span></a>sample command:</h2>
 
-<div class="highlight highlight-Python"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">pyteaser</span> <span class="kn">import</span> <span class="n">SummarizeUrl</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">url</span> <span class="o">=</span> <span class="s">'http://www.huffingtonpost.com/2013/11/22/twitter-forward-secrecy_n_4326599.html'</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">summaries</span> <span class="o">=</span> <span class="n">SummarizeUrl</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span> <span class="n">summaries</span>
-
+<div class="highlight highlight-Python"><pre><span class="pl-k">&gt;&gt;&gt;</span> <span class="pl-k">from</span> pyteaser <span class="pl-k">import</span> SummarizeUrl
+<span class="pl-k">&gt;&gt;&gt;</span> url <span class="pl-k">=</span> <span class="pl-s1"><span class="pl-pds">'</span>http://www.huffingtonpost.com/2013/11/22/twitter-forward-secrecy_n_4326599.html<span class="pl-pds">'</span></span>
+<span class="pl-k">&gt;&gt;&gt;</span> summaries <span class="pl-k">=</span> SummarizeUrl(url)
+<span class="pl-k">&gt;&gt;&gt;</span> <span class="pl-k">print</span> summaries
 </pre></div>
 
 <h2>
-<a name="output" class="anchor" href="#output"><span class="octicon octicon-link"></span></a>output</h2>
+<a id="output" class="anchor" href="#output" aria-hidden="true"><span class="octicon octicon-link"></span></a>output</h2>
 
 <pre><code>[
   'Twitter\'s move is the latest response from U.S. Internet firms following disclosures by former spy agency contractor Edward Snowden about widespread, classified U.S. government surveillance programs.', 
@@ -76,15 +81,13 @@
 </code></pre>
 
 <p>you can use Summarize(title, text) directly if you already have the text and the title. Otherwise you must install Python Goose to extract text from url.</p>
-        </section>
-
-        <footer>
-          Pyteaser is maintained by <a href="https://github.com/xiaoxu193">xiaoxu193</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
-
-        
-      </div>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/xiaoxu193">xiaoxu193</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
     </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
   </body>
 </html>
