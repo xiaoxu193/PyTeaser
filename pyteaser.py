@@ -105,7 +105,7 @@ def grab_link(inurl):
         article = Goose().extract(url=inurl)
         return article
     except ValueError:
-        print 'Goose error grab'
+        print 'Goose failed to extract article from url'
         return None
     return None
 
@@ -171,6 +171,7 @@ def split_words(text):
         text = regex_sub(r'[^\w ]', '', text, flags=REGEX_UNICODE)  # strip special chars
         return [x.strip('.').lower() for x in text.split()]
     except TypeError:
+        print "Error while splitting characters"
         return None
 
 
