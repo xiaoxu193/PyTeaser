@@ -72,7 +72,6 @@ def SummarizeUrl(url):
         print 'IOError'
         return None
 
-    #print ">>> " + str(high) + " - " + item['Source'] + " >>> " + highsen
     if not article or not article.cleaned_text or not article.title:
         return None
 
