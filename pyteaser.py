@@ -59,7 +59,7 @@ stopWords = set([
     "yung", "yun", "2", "3", "4", "5", "6", "7", "8", "9", "0", "time",
     "january", "february", "march", "april", "may", "june", "july",
     "august", "september", "october", "november", "december",
-    "philippine", "government", "police", "manila"
+    "government", "police"
 ])
 ideal = 20.0
 
