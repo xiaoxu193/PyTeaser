@@ -13,7 +13,7 @@ Summaries are created by ranking sentences in a news article according to how re
 
 
 # Installation:
-
+Requires Python 2.7. (Need Collections.Counter)
 ```
 pip install pyteaser
 ```
