@@ -72,7 +72,7 @@ def SummarizeUrl(url):
         print 'IOError'
         return None
 
-    if not article or not article.cleaned_text or not article.title:
+    if not (article and article.cleaned_text and article.title):
         return None
 
     summaries = Summarize(unicode(article.title),
