@@ -224,7 +224,7 @@ def title_score(title, sentence):
             count += 1.0
             
     if len(title) == 0:
-        return 0
+        return 0.0
         
     return count/len(title)
 
