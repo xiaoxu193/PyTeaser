@@ -222,6 +222,10 @@ def title_score(title, sentence):
     for word in sentence:
         if (word not in stopWords and word in title):
             count += 1.0
+            
+    if len(title) == 0:
+        return 0.0
+        
     return count/len(title)
 
 
