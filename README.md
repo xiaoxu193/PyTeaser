@@ -15,9 +15,17 @@ Summaries are created by ranking sentences in a news article according to how re
 # Installation:
 Requires Python 2.7. (Need Collections.Counter)
 ```
-pip install pyteaser
+sudo pip install pyteaser
 ```
 
+These dependency packages will be automatically installed:
+```
+Pillow
+lxml
+cssselect
+jieba
+beautifulsoup
+```
 Note: if you're installing on Windows, you have to install one of the dependency package lxml manually using:
 
 ```
