@@ -64,7 +64,7 @@ stopWords = set([
 ideal = 20.0
 
 
-def SummarizeUrl(url):
+def SummarizeUrl(url, i=5):
     summaries = []
     try:
         article = grab_link(url)
@@ -76,21 +76,21 @@ def SummarizeUrl(url):
         return None
 
     summaries = Summarize(unicode(article.title),
-                          unicode(article.cleaned_text))
+                          unicode(article.cleaned_text), i)
     return summaries
 
 
-def Summarize(title, text):
+def Summarize(title, text, i=5):
     summaries = []
     sentences = split_sentences(text)
     keys = keywords(text)
     titleWords = split_words(title)
 
-    if len(sentences) <= 5:
+    if len(sentences) <= i:
         return sentences
 
     #score setences, and use the top 5 sentences
-    ranks = score(sentences, titleWords, keys).most_common(5)
+    ranks = score(sentences, titleWords, keys).most_common(i)
     for rank in ranks:
         summaries.append(rank[0])
 
