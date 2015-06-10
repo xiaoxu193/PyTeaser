@@ -64,10 +64,10 @@ stopWords = set([
 ideal = 20.0
 
 
-def SummarizeUrl(url):
+def SummarizeUrl(url, *args, **kwargs):
     summaries = []
     try:
-        article = grab_link(url)
+        article = grab_link(url, *args, **kwargs)
     except IOError:
         print 'IOError'
         return None
@@ -97,11 +97,11 @@ def Summarize(title, text):
     return summaries
 
 
-def grab_link(inurl):
+def grab_link(inurl, *args, **kwargs):
     #extract article information using Python Goose
     from goose import Goose
     try:
-        article = Goose().extract(url=inurl)
+        article = Goose(*args, **kwargs).extract(url=inurl)
         return article
     except ValueError:
         print 'Goose failed to extract article from url'
