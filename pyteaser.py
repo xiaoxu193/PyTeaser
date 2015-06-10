@@ -82,17 +82,17 @@ def SummarizeUrl(url, *args, **kwargs):
     return summaries
 
 
-def Summarize(title, text):
+def Summarize(title, text, top_sentences=5):
     summaries = []
     sentences = split_sentences(text)
     keys = keywords(text)
     titleWords = split_words(title)
 
-    if len(sentences) <= 5:
+    if len(sentences) <= top_sentences:
         return sentences
 
-    #score setences, and use the top 5 sentences
-    ranks = score(sentences, titleWords, keys).most_common(5)
+    #score setences, and use the top X sentences
+    ranks = score(sentences, titleWords, keys).most_common(top_sentences)
     for rank in ranks:
         summaries.append(rank[0])
 
