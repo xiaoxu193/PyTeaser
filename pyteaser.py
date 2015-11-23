@@ -203,7 +203,8 @@ def split_sentences(text):
     of the line. Now, the s_iter list is formatted correctly but it is missing the last item of the sentences list. The
     second to last line adds this item to the s_iter list and the last line returns the full list.
     '''
-    
+
+    text = text.decode('utf-8', 'ignore')
     sentences = regex_split(u'(?<![A-ZА-ЯЁ])([.!?]"?)(?=\s+\"?[A-ZА-ЯЁ])', text, flags=REGEX_UNICODE)
     s_iter = zip(*[iter(sentences[:-1])] * 2)
     s_iter = [''.join(map(unicode,y)).lstrip() for y in s_iter]
