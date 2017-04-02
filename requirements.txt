@@ -1,0 +1,1 @@
+-e git+https://github.com/tgallant/python-goose.git#egg=python-goose
