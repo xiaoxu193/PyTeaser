@@ -3,6 +3,8 @@ from collections import Counter
 from math import fabs
 from re import split as regex_split, sub as regex_sub, UNICODE as REGEX_UNICODE
 
+abbreviations = set(["Mrs", "Mr", "Ms", "Prof", "Dr", "Gen", "Rep", "Sen", "St", "Sr", "Jr"])
+
 stopWords = set([
     "-", " ", ",", ".", "a", "e", "i", "o", "u", "t", "about", "above",
     "above", "across", "after", "afterwards", "again", "against", "all",
@@ -64,10 +66,10 @@ stopWords = set([
 ideal = 20.0
 
 
-def SummarizeUrl(url):
+def SummarizeUrl(url, *args, **kwargs):
     summaries = []
     try:
-        article = grab_link(url)
+        article = grab_link(url, *args, **kwargs)
     except IOError:
         print 'IOError'
         return None
@@ -80,28 +82,28 @@ def SummarizeUrl(url):
     return summaries
 
 
-def Summarize(title, text):
+def Summarize(title, text, top_sentences=5):
     summaries = []
     sentences = split_sentences(text)
     keys = keywords(text)
     titleWords = split_words(title)
 
-    if len(sentences) <= 5:
+    if len(sentences) <= top_sentences:
         return sentences
 
-    #score setences, and use the top 5 sentences
-    ranks = score(sentences, titleWords, keys).most_common(5)
+    #score setences, and use the top X sentences
+    ranks = score(sentences, titleWords, keys).most_common(top_sentences)
     for rank in ranks:
         summaries.append(rank[0])
 
     return summaries
 
 
-def grab_link(inurl):
+def grab_link(inurl, *args, **kwargs):
     #extract article information using Python Goose
     from goose import Goose
     try:
-        article = Goose().extract(url=inurl)
+        article = Goose(*args, **kwargs).extract(url=inurl)
         return article
     except ValueError:
         print 'Goose failed to extract article from url'
@@ -203,7 +205,7 @@ def split_sentences(text):
     of the line. Now, the s_iter list is formatted correctly but it is missing the last item of the sentences list. The
     second to last line adds this item to the s_iter list and the last line returns the full list.
     '''
-    
+    text = regex_sub(" (%s)\." % ("|".join(abbreviations)), r' \1', text)
     sentences = regex_split(u'(?<![A-ZА-ЯЁ])([.!?]"?)(?=\s+\"?[A-ZА-ЯЁ])', text, flags=REGEX_UNICODE)
     s_iter = zip(*[iter(sentences[:-1])] * 2)
     s_iter = [''.join(map(unicode,y)).lstrip() for y in s_iter]
