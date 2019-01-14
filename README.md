@@ -1,7 +1,7 @@
 PyTeaser
 ========
 
-PyTeaser takes any news article and extract a brief summary from it. It's based on the original [Scala](https://github.com/MojoJolo/textteaser) project.
+PyTeaser takes any English news article and extract a brief summary from it. It's based on the original [Scala](https://github.com/MojoJolo/textteaser) project.
 
 
 Summaries are created by ranking sentences in a news article according to how relevant they are to the entire text. The top 5 sentences are used to form a "summary". Each sentence is ranked by using four criteria:
@@ -13,19 +13,22 @@ Summaries are created by ranking sentences in a news article according to how re
 
 
 # Installation:
-Requires Python 2.7. (Need Collections.Counter)
+Requires Python 3
 ```
-sudo pip install pyteaser
+pip install pyteaser
 ```
 
 These dependency packages will be automatically installed:
+
 ```
 Pillow
 lxml
 cssselect
 jieba
 beautifulsoup
+goose3
 ```
+
 Note: if you're installing on Windows, you have to install one of the dependency package lxml manually using:
 
 ```
@@ -41,7 +44,7 @@ More information about this issue here: https://github.com/xiaoxu193/PyTeaser/is
 >>> from pyteaser import SummarizeUrl
 >>> url = 'http://www.huffingtonpost.com/2013/11/22/twitter-forward-secrecy_n_4326599.html'
 >>> summaries = SummarizeUrl(url)
->>> print summaries
+>>> print(summaries)
 
 ```
 
@@ -51,4 +54,4 @@ More information about this issue here: https://github.com/xiaoxu193/PyTeaser/is
 
 ```
 
-you can use Summarize(title, text) directly if you already have the text and the title. Otherwise you must install Python Goose to extract text from url.
+You can use `Summarize(title, text)` directly if you already have the text and the title (both should be strings).
