@@ -1,8 +1,9 @@
+from goose3 import Goose
 from collections import Counter
 from math import fabs
 import re
 
-stopWords = set([
+stopWords = {
     "-", " ", ",", ".", "a", "e", "i", "o", "u", "t", "about", "above",
     "above", "across", "after", "afterwards", "again", "against", "all",
     "almost", "alone", "along", "already", "also", "although", "always",
@@ -59,7 +60,7 @@ stopWords = set([
     "january", "february", "march", "april", "may", "june", "july",
     "august", "september", "october", "november", "december",
     "government", "police"
-])
+}
 ideal = 20.0
 
 
@@ -98,7 +99,6 @@ def Summarize(title, text):
 
 def grab_link(inurl):
     #extract article information using Python Goose
-    from goose3 import Goose
     try:
         article = Goose().extract(url=inurl)
         return article
