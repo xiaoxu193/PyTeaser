@@ -69,14 +69,14 @@ def SummarizeUrl(url):
     try:
         article = grab_link(url)
     except IOError:
-        print 'IOError'
+        print('IOError')
         return None
 
     if not (article and article.cleaned_text and article.title):
         return None
 
-    summaries = Summarize(unicode(article.title),
-                          unicode(article.cleaned_text))
+    summaries = Summarize(str(article.title),
+                          str(article.cleaned_text))
     return summaries
 
 
@@ -104,7 +104,7 @@ def grab_link(inurl):
         article = Goose().extract(url=inurl)
         return article
     except ValueError:
-        print 'Goose failed to extract article from url'
+        print('Goose failed to extract article from url')
         return None
     return None
 
@@ -170,7 +170,7 @@ def split_words(text):
         text = regex_sub(r'[^\w ]', '', text, flags=REGEX_UNICODE)  # strip special chars
         return [x.strip('.').lower() for x in text.split()]
     except TypeError:
-        print "Error while splitting characters"
+        print("Error while splitting characters")
         return None
 
 
@@ -204,9 +204,9 @@ def split_sentences(text):
     second to last line adds this item to the s_iter list and the last line returns the full list.
     '''
     
-    sentences = regex_split(u'(?<![A-ZА-ЯЁ])([.!?]"?)(?=\s+\"?[A-ZА-ЯЁ])', text, flags=REGEX_UNICODE)
-    s_iter = zip(*[iter(sentences[:-1])] * 2)
-    s_iter = [''.join(map(unicode,y)).lstrip() for y in s_iter]
+    sentences = regex_split('(?<![A-ZА-ЯЁ])([.!?]"?)(?=\s+\"?[A-ZА-ЯЁ])', text, flags=REGEX_UNICODE)
+    s_iter = list(zip(*[iter(sentences[:-1])] * 2))
+    s_iter = [''.join(map(str,y)).lstrip() for y in s_iter]
     s_iter.append(sentences[-1])
     return s_iter
 
