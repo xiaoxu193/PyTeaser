@@ -98,7 +98,7 @@ def Summarize(title, text):
 
 def grab_link(inurl):
     #extract article information using Python Goose
-    from goose import Goose
+    from goose3 import Goose
     try:
         article = Goose().extract(url=inurl)
         return article
