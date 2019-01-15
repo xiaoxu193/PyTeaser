@@ -21,6 +21,7 @@ CLASSIFIERS = [
 setup(name='pyteaser',
       version='2.0',
       description="PyTeaser takes any news article and extracts a brief summary from it",
+      classifiers=CLASSIFIERS,
       license='MIT',
       install_requires=['goose3'],
       packages=find_packages(),
