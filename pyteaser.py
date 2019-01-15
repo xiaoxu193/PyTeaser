@@ -65,7 +65,6 @@ ideal = 20.0
 
 
 def SummarizeUrl(url):
-    summaries = []
     try:
         article = grab_link(url)
     except IOError:
@@ -75,13 +74,10 @@ def SummarizeUrl(url):
     if not (article and article.cleaned_text and article.title):
         return None
 
-    summaries = Summarize(str(article.title),
-                          str(article.cleaned_text))
-    return summaries
+    return Summarize(article.title, article.cleaned_text)
 
 
 def Summarize(title, text):
-    summaries = []
     sentences = split_sentences(text)
     keys = keywords(text)
     titleWords = split_words(title)
@@ -90,17 +86,14 @@ def Summarize(title, text):
         return sentences
 
     #score setences, and use the top 5 sentences
-    ranks = score(sentences, titleWords, keys).most_common(5)
-    for rank in ranks:
-        summaries.append(rank[0])
+    sentence_ranks = score(sentences, titleWords, keys)
+    return [sentence for sentence, score in sentence_ranks.most_common(5)]
 
-    return summaries
-
-
-def grab_link(inurl):
+goose = Goose()
+def grab_link(url):
     #extract article information using Python Goose
     try:
-        article = Goose().extract(url=inurl)
+        article = goose.extract(url=url)
         return article
     except ValueError:
         print('Goose failed to extract article from url')
