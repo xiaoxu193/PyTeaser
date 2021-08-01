@@ -38,7 +38,7 @@ class OutputFormatter(object):
         Returns the language is by the article or
         the configuration language
         """
-        # we don't want to force the target laguage
+        # we don't want to force the target language
         # so we use the article.meta_lang
         if self.config.use_meta_language == True:
             if article.meta_lang:

@@ -55,7 +55,7 @@ class ContentExtractor(object):
         Returns the language is by the article or
         the configuration language
         """
-        # we don't want to force the target laguage
+        # we don't want to force the target language
         # so we use the article.meta_lang
         if self.config.use_meta_language == True:
             if article.meta_lang:
@@ -215,7 +215,7 @@ class ContentExtractor(object):
     def extract_tags(self, article):
         node = article.doc
 
-        # node doesn't have chidren
+        # node doesn't have children
         if len(list(node)) == 0:
             return NO_STRINGS
 
@@ -313,7 +313,7 @@ class ContentExtractor(object):
         it should be connected to other paragraphs,
         at least for the first n paragraphs so we'll want to make sure that
         the next sibling is a paragraph and has at
-        least some substatial weight to it
+        least some substantial weight to it
         """
         para = "p"
         steps_away = 0

@@ -61,7 +61,7 @@ class Article(object):
         self.top_image = None
 
         # holds a set of tags that may have
-        # been in the artcle, these are not meta keywords
+        # been in the article, these are not meta keywords
         self.tags = set()
 
         # holds a list of any movies

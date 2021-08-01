@@ -42,7 +42,7 @@ class Configuration(object):
         # interface to build your own
         self.enable_image_fetching = True
 
-        # set this valriable to False if you want to force
+        # set this variable to False if you want to force
         # the article language. OtherWise it will attempt to
         # find meta language and use the correct stopwords dictionary
         self.use_meta_language = True
@@ -53,7 +53,7 @@ class Configuration(object):
         # be use
         self.target_language = 'en'
 
-        # defautl stopwrods class
+        # default stopwrods class
         self.stopwords_class = StopWords
 
         # path to your imagemagick convert executable,

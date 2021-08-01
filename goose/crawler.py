@@ -89,10 +89,10 @@ class Crawler(object):
         # big stuff
         article.top_node = extractor.calculate_best_node(article)
         if article.top_node is not None:
-            # video handeling
+            # video handling
             video_extractor = self.get_video_extractor(article)
             video_extractor.get_videos()
-            # image handeling
+            # image handling
             if self.config.enable_image_fetching:
                 image_extractor = self.get_image_extractor(article)
                 article.top_image = image_extractor.get_best_image(article.raw_doc, article.top_node)
@@ -144,5 +144,5 @@ class Crawler(object):
             try:
                 os.remove(fname)
             except OSError:
-                # TODO better log handeling
+                # TODO better log handling
                 pass
