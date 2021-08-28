@@ -89,7 +89,7 @@ def Summarize(title, text):
     if len(sentences) <= 5:
         return sentences
 
-    #score setences, and use the top 5 sentences
+    #score sentences, and use the top 5 sentences
     ranks = score(sentences, titleWords, keys).most_common(5)
     for rank in ranks:
         summaries.append(rank[0])
