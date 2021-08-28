@@ -22,3 +22,6 @@ pip-log.txt
 .coverage
 .tox
 nosetests.xml
+
+# IDE
+.idea/
