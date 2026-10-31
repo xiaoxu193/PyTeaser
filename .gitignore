@@ -20,5 +20,23 @@ pip-log.txt
 
 # Unit test / coverage reports
 .coverage
+.coverage.*
+htmlcov/
 .tox
 nosetests.xml
+
+# Tool caches
+__pycache__/
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+
+# Editors and OS files
+.DS_Store
+*.swp
+.idea/
+.vscode/
