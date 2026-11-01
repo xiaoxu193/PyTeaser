@@ -1,0 +1,41 @@
+name: Bug report
+about: Report something that works incorrectly
+labels: bug
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear description of the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        from pyteaser import summarize
+        summarize("Title", "First sentence. Second sentence.")
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: PyTeaser version
+      placeholder: "2.0.0"
+  - type: input
+    id: python
+    attributes:
+      label: Python version
+      placeholder: "3.12"
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: For extraction issues, attach the saved HTML when possible.
