@@ -63,7 +63,8 @@ stopWords = set([
 ])
 _SUPPORTED_LANGUAGES = {"ar", "de", "en", "es", "fr", "it", "ru", "sv", "zh"}
 _STOP_WORDS_CACHE = {"en": stopWords}
-ideal = 20.0
+# Sentence length (in words) that scores highest in the length feature.
+IDEAL_SENTENCE_LENGTH = 20.0
 TITLE_WEIGHT = 1.5
 FREQUENCY_WEIGHT = 2.0
 LENGTH_WEIGHT = 1.0
@@ -593,7 +594,10 @@ def _should_split_after_period(text, punctuation_start, boundary_end):
 
 
 def length_score(sentence):
-    return max(0.0, 1.0 - abs(ideal - len(sentence)) / ideal)
+    return max(
+        0.0,
+        1.0 - abs(IDEAL_SENTENCE_LENGTH - len(sentence)) / IDEAL_SENTENCE_LENGTH,
+    )
 
 
 def title_score(title, sentence, stop_words=None):
