@@ -500,13 +500,13 @@ def keywords(text, language="en", stop_words=None):
     freq = Counter(x for x in text if x not in stop_words)
 
     minSize = min(10, len(freq))  # get first 10
-    keywords = {x: y for x, y in freq.most_common(minSize)}  # recreate a dict
+    top_keywords = dict(freq.most_common(minSize))
 
-    for k in keywords:
-        articleScore = keywords[k]*1.0 / numWords
-        keywords[k] = articleScore * 1.5 + 1
+    for k in top_keywords:
+        articleScore = top_keywords[k]*1.0 / numWords
+        top_keywords[k] = articleScore * 1.5 + 1
 
-    return keywords
+    return top_keywords
 
 
 def split_sentences(text):
