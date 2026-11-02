@@ -1,7 +1,6 @@
 import argparse
 from collections import Counter
 from dataclasses import dataclass
-from math import fabs
 from math import isfinite
 import os
 from pathlib import Path
@@ -439,7 +438,7 @@ def sbs(words, keywords):
     for word in words:
         if word in keywords:
             score += keywords[word]
-    return (1.0 / fabs(len(words)) * score)/10.0
+    return (1.0 / abs(len(words)) * score)/10.0
 
 
 def dbs(words, keywords):
@@ -594,7 +593,7 @@ def _should_split_after_period(text, punctuation_start, boundary_end):
 
 
 def length_score(sentence):
-    return max(0.0, 1.0 - fabs(ideal - len(sentence)) / ideal)
+    return max(0.0, 1.0 - abs(ideal - len(sentence)) / ideal)
 
 
 def title_score(title, sentence, stop_words=None):
