@@ -9,7 +9,7 @@ from re import search as regex_search, sub as regex_sub, UNICODE as REGEX_UNICOD
 
 stopWords = set([
     "-", " ", ",", ".", "a", "e", "i", "o", "u", "t", "about", "above",
-    "above", "across", "after", "afterwards", "again", "against", "all",
+    "across", "after", "afterwards", "again", "against", "all",
     "almost", "alone", "along", "already", "also", "although", "always",
     "am", "among", "amongst", "amoungst", "amount", "an", "and",
     "another", "any", "anyhow", "anyone", "anything", "anyway",
@@ -53,7 +53,7 @@ stopWords = set([
     "whereby", "wherein", "whereupon", "wherever", "whether", "which",
     "while", "whither", "who", "whoever", "whole", "whom", "whose",
     "why", "will", "with", "within", "without", "would", "yet", "you",
-    "your", "yours", "yourself", "yourselves", "the",
+    "your", "yours", "yourself", "yourselves",
     "monday", "tuesday", "wednesday", "thursday", "friday", "saturday",
     "sunday", "mon", "tue", "wed", "thu", "fri", "sat", "sun",
     "1", "10", "2012", "sa", "says", "pm",
