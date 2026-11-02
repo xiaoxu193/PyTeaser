@@ -409,6 +409,8 @@ def score(sentences, titleWords, keywords, language="en", stop_words=None,
         stop_words = _load_stop_words(language)
     weights = _coerce_scoring_weights(weights)
     senSize = len(sentences)
+    totalWeight = sum((
+        weights.title, weights.frequency, weights.length, weights.position))
     ranks = []
     for i, s in enumerate(sentences):
         sentence = split_words(s, language)
@@ -419,8 +421,6 @@ def score(sentences, titleWords, keywords, language="en", stop_words=None,
         dbsFeature = dbs(sentence, keywords)
         frequency = (sbsFeature + dbsFeature) / 2.0 * 10.0
 
-        totalWeight = sum((
-            weights.title, weights.frequency, weights.length, weights.position))
         totalScore = (
             titleFeature * weights.title
             + frequency * weights.frequency
