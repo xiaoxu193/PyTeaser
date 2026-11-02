@@ -443,27 +443,24 @@ def sbs(words, keywords):
 
 
 def dbs(words, keywords):
-    if (len(words) == 0):
-        return 0
+    """Score keyword density from products of adjacent keyword hits."""
+    if not words:
+        return 0.0
 
-    summ = 0
-    first = []
-    second = []
+    total = 0.0
+    previous = None  # (index, score) of the previous keyword hit
 
     for i, word in enumerate(words):
         if word in keywords:
             score = keywords[word]
-            if first == []:
-                first = [i, score]
-            else:
-                second = first
-                first = [i, score]
-                dif = first[0] - second[0]
-                summ += (first[1]*second[1]) / (dif ** 2)
+            if previous is not None:
+                distance = i - previous[0]
+                total += (score * previous[1]) / (distance ** 2)
+            previous = (i, score)
 
     # number of intersections
-    k = len(set(keywords.keys()).intersection(set(words))) + 1
-    return (1/(k*(k+1.0))*summ)
+    k = len(set(keywords).intersection(words)) + 1
+    return 1 / (k * (k + 1.0)) * total
 
 
 def split_words(text, language="en"):
