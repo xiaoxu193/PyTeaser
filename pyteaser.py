@@ -433,9 +433,10 @@ def score(sentences, titleWords, keywords, language="en", stop_words=None,
 
 
 def sbs(words, keywords):
+    """Score the share of sentence words that are top keywords."""
     score = 0.0
-    if len(words) == 0:
-        return 0
+    if not words:
+        return 0.0
     for word in words:
         if word in keywords:
             score += keywords[word]
