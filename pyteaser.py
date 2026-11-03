@@ -1,4 +1,5 @@
 import argparse
+from bisect import bisect_left
 from collections import Counter
 from dataclasses import dataclass
 from math import isfinite
@@ -609,30 +610,17 @@ def title_score(title, sentence, stop_words=None):
     return len(title_terms.intersection(sentence_terms)) / float(len(title_terms))
 
 
-def sentence_position(i, size):
-    """different sentence positions indicate different
-    probability of being an important sentence"""
+_POSITION_BOUNDARIES = (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
+_POSITION_SCORES = (0.17, 0.23, 0.14, 0.08, 0.05, 0.04, 0.06, 0.04, 0.04, 0.15)
 
-    normalized = i*1.0 / size
-    if 0 < normalized <= 0.1:
-        return 0.17
-    elif 0.1 < normalized <= 0.2:
-        return 0.23
-    elif 0.2 < normalized <= 0.3:
-        return 0.14
-    elif 0.3 < normalized <= 0.4:
-        return 0.08
-    elif 0.4 < normalized <= 0.5:
-        return 0.05
-    elif 0.5 < normalized <= 0.6:
-        return 0.04
-    elif 0.6 < normalized <= 0.7:
-        return 0.06
-    elif 0.7 < normalized <= 0.8:
-        return 0.04
-    elif 0.8 < normalized <= 0.9:
-        return 0.04
-    elif 0.9 < normalized <= 1.0:
-        return 0.15
-    else:
-        return 0
+
+def sentence_position(i, size):
+    """Score a sentence by its relative position in the article.
+
+    Lead sentences (and, more weakly, closing ones) are more likely to be
+    central, mirroring the original Graph-Based Sentence ranker.
+    """
+    normalized = i * 1.0 / size
+    if not 0 < normalized <= 1.0:
+        return 0.0
+    return _POSITION_SCORES[bisect_left(_POSITION_BOUNDARIES, normalized)]
