@@ -1,3 +1,13 @@
+"""Extractive summarization of article text and news URLs.
+
+The public API is :func:`summarize` and :func:`summarize_url`, plus the
+detailed variant :func:`summarize_detailed`. Sentences are ranked with a
+weighted mix of title relevance, keyword frequency, length, and position;
+near-duplicate sentences are filtered and results are returned in article
+order. URL fetching and article extraction are provided by the bundled
+Goose extractor.
+"""
+
 import argparse
 from bisect import bisect_left
 from collections import Counter
