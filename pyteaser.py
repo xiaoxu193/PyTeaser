@@ -17,6 +17,8 @@ import os
 from pathlib import Path
 from re import search as regex_search, sub as regex_sub, UNICODE as REGEX_UNICODE
 
+__version__ = "2.0.0"
+
 stopWords = set([
     "-", " ", ",", ".", "a", "e", "i", "o", "u", "t", "about", "above",
     "across", "after", "afterwards", "again", "against", "all",
