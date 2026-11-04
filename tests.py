@@ -1,6 +1,7 @@
 """Offline tests for PyTeaser's text summarization API."""
 
 import os
+import json
 import socket
 import subprocess
 import sys
@@ -210,6 +211,23 @@ class TestSummarize(TestCase):
 
         self.assertEqual(error.exception.code, 2)
         self.assertIn("--title", error_output.getvalue())
+
+    def test_cli_json_output_reports_scores(self):
+        json_output = StringIO()
+        with redirect_stdout(json_output):
+            status = main([
+                "--title", "CLI example",
+                "--text", "One sentence. Two sentence.",
+                "--sentence-count", "1",
+                "--json",
+            ])
+
+        self.assertEqual(status, 0)
+        payload = json.loads(json_output.getvalue())
+        self.assertEqual(len(payload), 1)
+        self.assertEqual(payload[0]["sentence"], "One sentence.")
+        self.assertEqual(payload[0]["index"], 0)
+        self.assertIsInstance(payload[0]["score"], float)
 
     def test_cli_reports_the_version(self):
         version_output = StringIO()

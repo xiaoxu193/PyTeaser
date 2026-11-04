@@ -12,6 +12,7 @@ import argparse
 from bisect import bisect_left
 from collections import Counter
 from dataclasses import dataclass
+import json
 from math import isfinite
 import os
 from pathlib import Path
@@ -258,6 +259,9 @@ def main(argv=None):
     parser.add_argument("--sentence-count", type=int, default=5)
     parser.add_argument("--max-words", type=int, default=None)
     parser.add_argument("--language", default=None, help="language code such as en or es")
+    parser.add_argument(
+        "--json", action="store_true",
+        help="print selected sentences with indices and scores as JSON")
     args = parser.parse_args(argv)
 
     if args.url and args.title is not None:
@@ -265,27 +269,46 @@ def main(argv=None):
 
     try:
         if args.url:
-            summary = summarize_url(
-                args.url,
-                sentence_count=args.sentence_count,
-                language=args.language,
-                max_words=args.max_words,
-            )
+            requested_language = (
+                _normalize_language(args.language) if args.language else None)
+            title, text, language = _fetch_article(args.url, requested_language)
         else:
             text = args.text if args.text is not None else args.input_file.read_text(
                 encoding="utf-8")
-            summary = summarize(
-                args.title,
+            title = args.title
+            language = args.language or "en"
+
+        if args.json:
+            results = summarize_detailed(
+                title,
                 text,
                 sentence_count=args.sentence_count,
-                language=args.language or "en",
+                language=language,
                 max_words=args.max_words,
             )
+            print(json.dumps(
+                [
+                    {"index": result.index,
+                     "sentence": result.sentence,
+                     "score": result.score}
+                    for result in results
+                ],
+                ensure_ascii=False,
+                indent=2,
+            ))
+        else:
+            summary = summarize(
+                title,
+                text,
+                sentence_count=args.sentence_count,
+                language=language,
+                max_words=args.max_words,
+            )
+            for sentence in summary:
+                print(sentence)
     except (PyTeaserError, OSError, TypeError, ValueError) as error:
         parser.exit(2, "pyteaser: %s\n" % error)
 
-    for sentence in summary:
-        print(sentence)
     return 0
 
 
