@@ -254,6 +254,9 @@ def main(argv=None):
     parser.add_argument("--language", default=None, help="language code such as en or es")
     args = parser.parse_args(argv)
 
+    if args.url and args.title is not None:
+        parser.error("--title only applies to --text and --input-file input")
+
     try:
         if args.url:
             summary = summarize_url(

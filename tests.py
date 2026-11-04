@@ -191,6 +191,15 @@ class TestSummarize(TestCase):
         self.assertEqual(status, 0)
         self.assertTrue(file_output.getvalue().strip())
 
+    def test_cli_rejects_title_with_url_input(self):
+        error_output = StringIO()
+        with redirect_stderr(error_output):
+            with self.assertRaises(SystemExit) as error:
+                main(["--url", "https://example.test/a", "--title", "Unused"])
+
+        self.assertEqual(error.exception.code, 2)
+        self.assertIn("--title", error_output.getvalue())
+
     def test_cli_reports_the_version(self):
         version_output = StringIO()
         with redirect_stdout(version_output):
