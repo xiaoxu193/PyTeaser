@@ -1,7 +1,9 @@
 """Offline tests for PyTeaser's text summarization API."""
 
-import socket
 import os
+import socket
+import subprocess
+import sys
 import tempfile
 from contextlib import redirect_stderr, redirect_stdout
 from concurrent.futures import ThreadPoolExecutor
@@ -190,6 +192,15 @@ class TestSummarize(TestCase):
 
         self.assertEqual(status, 0)
         self.assertTrue(file_output.getvalue().strip())
+
+    def test_cli_is_runnable_as_a_module(self):
+        completed = subprocess.run(
+            [sys.executable, "-m", "pyteaser", "--text", "One sentence only.",
+             "--sentence-count", "1"],
+            capture_output=True, text=True, check=True,
+        )
+
+        self.assertEqual(completed.stdout.strip(), "One sentence only.")
 
     def test_cli_rejects_title_with_url_input(self):
         error_output = StringIO()
