@@ -137,17 +137,11 @@ class ArticleExtractionError(PyTeaserError):
     """Raised when a fetched page does not yield an article."""
 
 
-def SummarizeUrl(url, sentence_count=5, language=None, max_words=None,
-                 weights=None):
-    sentence_count = _validate_sentence_count(sentence_count)
-    max_words = _validate_max_words(max_words)
-    requested_language = (
-        _normalize_language(language) if language is not None else None)
+def _fetch_article(url, language=None):
+    """Fetch a URL and return its ``(title, text, language)`` triple."""
     url = _coerce_text(url, "url")
     if not url.strip():
         raise ValueError("url must not be empty")
-    if sentence_count == 0 or max_words == 0:
-        return []
 
     from lxml.etree import LxmlError
     from goose.network import FetchError
@@ -164,17 +158,29 @@ def SummarizeUrl(url, sentence_count=5, language=None, max_words=None,
         raise ArticleExtractionError(
             "The page did not contain both an article title and body text")
 
-    if requested_language is None:
+    if language is None:
         try:
-            requested_language = _normalize_language(article.meta_lang or "en")
+            language = _normalize_language(article.meta_lang or "en")
         except ValueError:
-            requested_language = "en"
+            language = "en"
+    return str(article.title), str(article.cleaned_text), language
 
+
+def SummarizeUrl(url, sentence_count=5, language=None, max_words=None,
+                 weights=None):
+    sentence_count = _validate_sentence_count(sentence_count)
+    max_words = _validate_max_words(max_words)
+    requested_language = (
+        _normalize_language(language) if language is not None else None)
+    if sentence_count == 0 or max_words == 0:
+        return []
+
+    title, text, resolved_language = _fetch_article(url, requested_language)
     return Summarize(
-        str(article.title),
-        str(article.cleaned_text),
+        title,
+        text,
         sentence_count,
-        language=requested_language,
+        language=resolved_language,
         max_words=max_words,
         weights=weights,
     )
