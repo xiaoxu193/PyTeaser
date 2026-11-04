@@ -237,7 +237,12 @@ def summarize_detailed(title, text, sentence_count=5, language="en",
 
 def main(argv=None):
     """Command-line entry point for summarizing text, files, or URLs."""
-    parser = argparse.ArgumentParser(description="Create an extractive summary")
+    parser = argparse.ArgumentParser(
+        description="Create an extractive summary",
+        prog="pyteaser",
+    )
+    parser.add_argument(
+        "--version", action="version", version="pyteaser " + __version__)
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--url", help="article URL to fetch and summarize")
     source.add_argument("--text", help="article text to summarize")

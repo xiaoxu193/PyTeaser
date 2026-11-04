@@ -191,6 +191,15 @@ class TestSummarize(TestCase):
         self.assertEqual(status, 0)
         self.assertTrue(file_output.getvalue().strip())
 
+    def test_cli_reports_the_version(self):
+        version_output = StringIO()
+        with redirect_stdout(version_output):
+            with self.assertRaises(SystemExit) as error:
+                main(["--version"])
+
+        self.assertEqual(error.exception.code, 0)
+        self.assertIn("pyteaser", version_output.getvalue())
+
     def test_cli_reports_url_errors_without_a_traceback(self):
         error_output = StringIO()
         with redirect_stderr(error_output):

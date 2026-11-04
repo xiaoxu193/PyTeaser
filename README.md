@@ -48,6 +48,7 @@ After installation, summarize text or a UTF-8 file:
 pyteaser --title "Example article" --text "First sentence. Second sentence." --sentence-count 1
 pyteaser --input-file article.txt --title "Example article" --max-words 120
 pyteaser --url "https://example.com/news/article" --sentence-count 3
+pyteaser --version
 ```
 
 The original `Summarize(title, text)` function remains available. Both APIs return a list of sentence strings.
