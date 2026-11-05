@@ -122,7 +122,7 @@ class StopWordsChinese(StopWords):
     """
     def __init__(self, language='zh'):
         # force zh language code
-        super(StopWordsChinese, self).__init__(language='zh')
+        super().__init__(language='zh')
 
     def candiate_words(self, stripped_input):
         # jieba build a tree that takes sometime
@@ -148,7 +148,7 @@ class StopWordsArabic(StopWords):
     """
     def __init__(self, language='ar'):
         # force ar language code
-        super(StopWordsArabic, self).__init__(language='ar')
+        super().__init__(language='ar')
 
     def candiate_words(self, stripped_input):
         import nltk

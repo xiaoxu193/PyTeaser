@@ -106,7 +106,7 @@ def _create_validated_socket(host, port, timeout, source_address,
 class _SafeHTTPConnection(HTTPConnection):
     def __init__(self, host, *args, allow_private_network=False, **kwargs):
         self.allow_private_network = allow_private_network
-        super(_SafeHTTPConnection, self).__init__(host, *args, **kwargs)
+        super().__init__(host, *args, **kwargs)
 
     def connect(self):
         self.sock = _create_validated_socket(
@@ -119,7 +119,7 @@ class _SafeHTTPConnection(HTTPConnection):
 class _SafeHTTPSConnection(HTTPSConnection):
     def __init__(self, host, *args, allow_private_network=False, **kwargs):
         self.allow_private_network = allow_private_network
-        super(_SafeHTTPSConnection, self).__init__(host, *args, **kwargs)
+        super().__init__(host, *args, **kwargs)
 
     def connect(self):
         self.sock = _create_validated_socket(
@@ -134,7 +134,7 @@ class _SafeHTTPSConnection(HTTPSConnection):
 
 class SafeHTTPHandler(HTTPHandler):
     def __init__(self, allow_private_network=False):
-        super(SafeHTTPHandler, self).__init__()
+        super().__init__()
         self.allow_private_network = allow_private_network
 
     def http_open(self, request):
@@ -147,7 +147,7 @@ class SafeHTTPHandler(HTTPHandler):
 
 class SafeHTTPSHandler(HTTPSHandler):
     def __init__(self, allow_private_network=False):
-        super(SafeHTTPSHandler, self).__init__()
+        super().__init__()
         self.allow_private_network = allow_private_network
 
     def https_open(self, request):
@@ -163,12 +163,12 @@ class SafeRedirectHandler(HTTPRedirectHandler):
     """Revalidate every redirect target before allowing urllib to follow it."""
 
     def __init__(self, allow_private_network=False):
-        super(SafeRedirectHandler, self).__init__()
+        super().__init__()
         self.allow_private_network = allow_private_network
 
     def redirect_request(self, request, response, code, message, headers, new_url):
         validate_url(new_url, self.allow_private_network)
-        return super(SafeRedirectHandler, self).redirect_request(
+        return super().redirect_request(
             request, response, code, message, headers, new_url)
 
 

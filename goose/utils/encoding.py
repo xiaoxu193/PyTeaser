@@ -9,10 +9,10 @@ class DjangoUnicodeDecodeError(UnicodeDecodeError):
 
     def __init__(self, obj, *args):
         self.obj = obj
-        super(DjangoUnicodeDecodeError, self).__init__(*args)
+        super().__init__(*args)
 
     def __str__(self):
-        original = super(DjangoUnicodeDecodeError, self).__str__()
+        original = super().__str__()
         return "%s. You passed in %r (%s)" % (original, self.obj, type(self.obj))
 
 
