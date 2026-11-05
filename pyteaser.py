@@ -8,12 +8,15 @@ order. URL fetching and article extraction are provided by the bundled
 Goose extractor.
 """
 
+from __future__ import annotations
+
 import argparse
 from bisect import bisect_left
 from collections import Counter
 from dataclasses import dataclass
 import json
 from math import isfinite
+from typing import Sequence
 import os
 from pathlib import Path
 from re import search as regex_search, sub as regex_sub, UNICODE as REGEX_UNICODE
@@ -106,7 +109,7 @@ class ScoringWeights:
     length: float = LENGTH_WEIGHT
     position: float = POSITION_WEIGHT
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         values = (self.title, self.frequency, self.length, self.position)
         if any(isinstance(value, bool) or not isinstance(value, (int, float))
                for value in values):
@@ -138,7 +141,7 @@ class ArticleExtractionError(PyTeaserError):
     """Raised when a fetched page does not yield an article."""
 
 
-def _fetch_article(url, language=None):
+def _fetch_article(url: str | bytes, language: str | None = None) -> tuple[str, str, str]:
     """Fetch a URL and return its ``(title, text, language)`` triple."""
     url = _coerce_text(url, "url")
     if not url.strip():
@@ -167,8 +170,10 @@ def _fetch_article(url, language=None):
     return str(article.title), str(article.cleaned_text), language
 
 
-def SummarizeUrl(url, sentence_count=5, language=None, max_words=None,
-                 weights=None):
+def SummarizeUrl(url: str | bytes, sentence_count: int = 5,
+                 language: str | None = None, max_words: int | None = None,
+                 weights: ScoringWeights | dict[str, float] | None = None,
+                 ) -> list[str]:
     sentence_count = _validate_sentence_count(sentence_count)
     max_words = _validate_max_words(max_words)
     requested_language = (
@@ -187,8 +192,11 @@ def SummarizeUrl(url, sentence_count=5, language=None, max_words=None,
     )
 
 
-def Summarize(title, text, sentence_count=5, language="en", max_words=None,
-              weights=None):
+def Summarize(title: str | bytes | None, text: str | bytes,
+              sentence_count: int = 5, language: str = "en",
+              max_words: int | None = None,
+              weights: ScoringWeights | dict[str, float] | None = None,
+              ) -> list[str]:
     """Return an extractive summary for a title and article text.
 
     Text arguments may be strings or UTF-8 encoded bytes. A missing title is
@@ -202,8 +210,11 @@ def Summarize(title, text, sentence_count=5, language="en", max_words=None,
     ]
 
 
-def summarize_detailed(title, text, sentence_count=5, language="en",
-                       max_words=None, weights=None):
+def summarize_detailed(title: str | bytes | None, text: str | bytes,
+                       sentence_count: int = 5, language: str = "en",
+                       max_words: int | None = None,
+                       weights: ScoringWeights | dict[str, float] | None = None,
+                       ) -> list[ScoredSentence]:
     """Return selected sentences with their source indices and scores."""
     sentence_count = _validate_sentence_count(sentence_count)
     max_words = _validate_max_words(max_words)
@@ -242,7 +253,7 @@ def summarize_detailed(title, text, sentence_count=5, language="en",
             for index, sentence, score in selected]
 
 
-def main(argv=None):
+def main(argv: Sequence[str] | None = None) -> int:
     """Command-line entry point for summarizing text, files, or URLs."""
     parser = argparse.ArgumentParser(
         description="Create an extractive summary",
@@ -312,14 +323,19 @@ def main(argv=None):
     return 0
 
 
-def summarize(title, text, sentence_count=5, language="en", max_words=None,
-              weights=None):
+def summarize(title: str | bytes | None, text: str | bytes,
+              sentence_count: int = 5, language: str = "en",
+              max_words: int | None = None,
+              weights: ScoringWeights | dict[str, float] | None = None,
+              ) -> list[str]:
     """PEP 8 spelling of :func:`Summarize`."""
     return Summarize(title, text, sentence_count, language, max_words, weights)
 
 
-def summarize_url(url, sentence_count=5, language=None, max_words=None,
-                  weights=None):
+def summarize_url(url: str | bytes, sentence_count: int = 5,
+                  language: str | None = None, max_words: int | None = None,
+                  weights: ScoringWeights | dict[str, float] | None = None,
+                  ) -> list[str]:
     """PEP 8 spelling of :func:`SummarizeUrl`."""
     return SummarizeUrl(url, sentence_count, language, max_words, weights)
 
