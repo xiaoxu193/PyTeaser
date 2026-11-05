@@ -19,6 +19,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+import contextlib
 import os
 import glob
 from copy import deepcopy
@@ -128,8 +129,7 @@ class Crawler:
         return html
 
     def get_image_extractor(self, article):
-        http_client = None
-        return UpgradedImageIExtractor(http_client, article, self.config)
+        return UpgradedImageIExtractor(None, article, self.config)
 
     def get_video_extractor(self, article):
         return VideoExtractor(article, self.config)
@@ -150,8 +150,5 @@ class Crawler:
     def release_resources(self, article):
         path = os.path.join(self.config.local_storage_path, '%s_*' % article.link_hash)
         for fname in glob.glob(path):
-            try:
+            with contextlib.suppress(OSError):
                 os.remove(fname)
-            except OSError:
-                # TODO better log handling
-                pass
