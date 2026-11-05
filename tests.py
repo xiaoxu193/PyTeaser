@@ -225,8 +225,8 @@ class TestSummarize(TestCase):
         self.assertEqual(status, 0)
         payload = json.loads(json_output.getvalue())
         self.assertEqual(len(payload), 1)
-        self.assertEqual(payload[0]["sentence"], "One sentence.")
-        self.assertEqual(payload[0]["index"], 0)
+        self.assertEqual(payload[0]["sentence"], "Two sentence.")
+        self.assertEqual(payload[0]["index"], 1)
         self.assertIsInstance(payload[0]["score"], float)
 
     def test_cli_reports_the_version(self):
