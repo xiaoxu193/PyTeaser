@@ -34,7 +34,7 @@ KNOWN_IMG_DOM_NAMES = [
 ]
 
 
-class DepthTraversal(object):
+class DepthTraversal:
 
     def __init__(self, node, parent_depth, sibling_depth):
         self.node = node
@@ -42,7 +42,7 @@ class DepthTraversal(object):
         self.sibling_depth = sibling_depth
 
 
-class ImageExtractor(object):
+class ImageExtractor:
     pass
 
 

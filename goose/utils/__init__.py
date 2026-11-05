@@ -27,7 +27,7 @@ import goose
 import urllib.parse as urlparse
 
 
-class BuildURL(object):
+class BuildURL:
     def __init__(self, url, finalurl=None):
         self.url = url
         self.finalurl = finalurl
@@ -77,7 +77,7 @@ class BuildURL(object):
         ))
 
 
-class FileHelper(object):
+class FileHelper:
 
     @classmethod
     def loadResourceFile(self, filename):
@@ -94,14 +94,14 @@ class FileHelper(object):
             raise IOError("Couldn't open file %s" % path)
 
 
-class ParsingCandidate(object):
+class ParsingCandidate:
 
     def __init__(self, urlString, link_hash):
         self.urlString = self.url = urlString
         self.link_hash = link_hash
 
 
-class RawHelper(object):
+class RawHelper:
     @classmethod
     def get_parsing_candidate(self, url, raw_html):
         if isinstance(raw_html, str):
@@ -110,7 +110,7 @@ class RawHelper(object):
         return ParsingCandidate(url, link_hash)
 
 
-class URLHelper(object):
+class URLHelper:
     @classmethod
     def get_parsing_candidate(self, url_to_crawl):
         # replace shebang is urls
@@ -121,7 +121,7 @@ class URLHelper(object):
         return ParsingCandidate(final_url, link_hash)
 
 
-class StringSplitter(object):
+class StringSplitter:
     """\
 
     """
@@ -134,7 +134,7 @@ class StringSplitter(object):
         return self.pattern.split(string)
 
 
-class StringReplacement(object):
+class StringReplacement:
 
     def __init__(self, pattern, replaceWith):
         self.pattern = pattern
@@ -146,7 +146,7 @@ class StringReplacement(object):
         return string.replace(self.pattern, self.replaceWith)
 
 
-class ReplaceSequence(object):
+class ReplaceSequence:
 
     def __init__(self):
         self.replacements = []

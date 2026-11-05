@@ -21,7 +21,7 @@ limitations under the License.
 """
 
 
-class Article(object):
+class Article:
 
     def __init__(self):
         # title of the article

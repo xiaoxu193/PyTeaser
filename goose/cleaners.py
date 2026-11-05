@@ -22,7 +22,7 @@ limitations under the License.
 from goose.utils import ReplaceSequence
 
 
-class DocumentCleaner(object):
+class DocumentCleaner:
 
     def __init__(self, config):
         self.config = config

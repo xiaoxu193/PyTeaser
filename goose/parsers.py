@@ -26,7 +26,7 @@ from goose.text import innerTrim
 from goose.text import encodeValue
 
 
-class Parser(object):
+class Parser:
 
     @classmethod
     def xpath_re(self, node, expression):

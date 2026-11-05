@@ -32,7 +32,7 @@ from goose.videos.extractors import VideoExtractor
 from goose.network import HtmlFetcher
 
 
-class CrawlCandidate(object):
+class CrawlCandidate:
 
     def __init__(self, config, url, raw_html):
         self.config = config
@@ -42,7 +42,7 @@ class CrawlCandidate(object):
         self.raw_html = raw_html
 
 
-class Crawler(object):
+class Crawler:
 
     def __init__(self, config):
         self.config = config

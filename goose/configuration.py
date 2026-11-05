@@ -27,7 +27,7 @@ from goose.parsers import ParserSoup
 from goose.version import __version__
 
 
-class Configuration(object):
+class Configuration:
 
     def __init__(self):
         # What's the minimum bytes for an image we'd accept is,

@@ -23,7 +23,7 @@ from html import unescape
 from goose.text import innerTrim, stopwords_class_for_language
 
 
-class OutputFormatter(object):
+class OutputFormatter:
 
     def __init__(self, config):
         self.top_node = None

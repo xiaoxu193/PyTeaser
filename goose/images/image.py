@@ -21,7 +21,7 @@ limitations under the License.
 """
 
 
-class Image(object):
+class Image:
 
     def __init__(self):
         # holds the Element node of the image we think is top dog
@@ -51,7 +51,7 @@ class Image(object):
         return self.src
 
 
-class ImageDetails(object):
+class ImageDetails:
 
     def __init__(self):
 
@@ -83,7 +83,7 @@ class ImageDetails(object):
         self.mime_type = mime_type
 
 
-class LocallyStoredImage(object):
+class LocallyStoredImage:
 
     def __init__(self, src='', local_filename='',
         link_hash='', bytes=int(0), file_extension='', height=0, width=0):

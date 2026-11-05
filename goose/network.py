@@ -218,7 +218,7 @@ def fetch_bytes(config, url, max_bytes, accepted_content_types=None):
         return _read_limited(response, max_bytes)
 
 
-class HtmlFetcher(object):
+class HtmlFetcher:
 
     def __init__(self):
         pass

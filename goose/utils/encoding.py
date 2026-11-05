@@ -16,7 +16,7 @@ class DjangoUnicodeDecodeError(UnicodeDecodeError):
         return "%s. You passed in %r (%s)" % (original, self.obj, type(self.obj))
 
 
-class StrAndUnicode(object):
+class StrAndUnicode:
     """Compatibility mixin whose string representation is Unicode text."""
 
     def __str__(self):

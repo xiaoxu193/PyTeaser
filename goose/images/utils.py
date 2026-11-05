@@ -31,7 +31,7 @@ from goose.images.image import ImageDetails
 from goose.images.image import LocallyStoredImage
 
 
-class ImageUtils(object):
+class ImageUtils:
 
     @classmethod
     def get_image_dimensions(self, identify_program, path):

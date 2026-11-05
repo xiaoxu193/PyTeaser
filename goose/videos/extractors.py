@@ -28,7 +28,7 @@ VIDEOS_TAGS = ['iframe', 'embed', 'object', 'video']
 VIDEO_PROVIDERS = ['youtube', 'vimeo', 'dailymotion', 'kewego']
 
 
-class VideoExtractor(object):
+class VideoExtractor:
     """\
     Extracts a list of video from Article top node
     """

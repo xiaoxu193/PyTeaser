@@ -42,7 +42,7 @@ def encodeValue(value):
     return smart_unicode(value, errors='replace')
 
 
-class WordStats(object):
+class WordStats:
 
     def __init__(self):
         # total number of stopwords or
@@ -75,7 +75,7 @@ class WordStats(object):
         self.word_count = cnt
 
 
-class StopWords(object):
+class StopWords:
 
     PUNCTUATION = re.compile(r"[^\w\s]", re.UNICODE)
     TRANS_TABLE = str.maketrans('', '', string.punctuation)

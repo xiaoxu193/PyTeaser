@@ -28,7 +28,7 @@ from goose.crawler import CrawlCandidate
 from goose.crawler import Crawler
 
 
-class Goose(object):
+class Goose:
     """\
 
     """

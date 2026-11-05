@@ -42,7 +42,7 @@ A_HREF_TAG_SELECTOR = "a[href*='/tag/'], a[href*='/tags/'], a[href*='/topic/'], 
 RE_LANG = r'^[A-Za-z]{2}$'
 
 
-class ContentExtractor(object):
+class ContentExtractor:
 
     def __init__(self, config):
         self.config = config
