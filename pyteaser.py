@@ -14,12 +14,12 @@ import argparse
 from bisect import bisect_left
 from collections import Counter
 from dataclasses import dataclass
+from importlib import resources
 import json
 from math import isfinite
-from typing import Sequence
-import os
 from pathlib import Path
 from re import search as regex_search, sub as regex_sub, UNICODE as REGEX_UNICODE
+from typing import Sequence
 
 __version__ = "2.0.0"
 
@@ -366,24 +366,19 @@ def _normalize_language(language):
 def _load_stop_words(language):
     language = _normalize_language(language)
     if language not in _STOP_WORDS_CACHE:
-        path = os.path.join(
-            os.path.dirname(__file__),
-            "goose",
-            "resources",
-            "text",
-            "stopwords-%s.txt" % language,
-        )
         try:
-            with open(path, "r", encoding="utf-8") as resource:
-                _STOP_WORDS_CACHE[language] = {
-                    line.strip().casefold()
-                    for line in resource
-                    if line.strip() and not line.lstrip().startswith("#")
-                }
-        except OSError as error:
+            resource = resources.files("goose.resources.text").joinpath(
+                "stopwords-%s.txt" % language)
+            content = resource.read_text(encoding="utf-8")
+        except (OSError, UnicodeError, ModuleNotFoundError) as error:
             raise ValueError(
                 "Stopword resource is missing for language: %s" % language
             ) from error
+        _STOP_WORDS_CACHE[language] = {
+            line.strip().casefold()
+            for line in content.splitlines()
+            if line.strip() and not line.lstrip().startswith("#")
+        }
     return _STOP_WORDS_CACHE[language]
 
 
