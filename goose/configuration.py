@@ -1,5 +1,5 @@
 """\
-This is a python port of "Goose" orignialy licensed to Gravity.com
+This is a python port of "Goose" originally licensed to Gravity.com
 under one or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
 regarding copyright ownership.
@@ -40,7 +40,7 @@ class Configuration(object):
         self.enable_image_fetching = False
 
         # set this variable to False if you want to force
-        # the article language. OtherWise it will attempt to
+        # the article language. Otherwise it will attempt to
         # find meta language and use the correct stopwords dictionary
         self.use_meta_language = True
 
@@ -50,7 +50,7 @@ class Configuration(object):
         # be use
         self.target_language = 'en'
 
-        # default stopwrods class
+        # default stopwords class
         self.stopwords_class = StopWords
 
         # path to your imagemagick convert executable,

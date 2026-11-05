@@ -1,5 +1,5 @@
 """\
-This is a python port of "Goose" orignialy licensed to Gravity.com
+This is a python port of "Goose" originally licensed to Gravity.com
 under one or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
 regarding copyright ownership.
