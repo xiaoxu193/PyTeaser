@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """\
 
 12-14-2013: Removed the StopWordsArabic class in order to remove nltk dependency for PyTeaser 

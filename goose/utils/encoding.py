@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Small text/byte conversion helpers used by the Goose extractor."""
 
 import datetime
