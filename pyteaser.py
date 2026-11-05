@@ -153,10 +153,11 @@ def _fetch_article(url: str | bytes, language: str | None = None) -> tuple[str, 
     try:
         article = grab_link(url)
     except FetchError as error:
-        raise ArticleFetchError("Could not fetch the article URL") from error
+        raise ArticleFetchError(
+            "Could not fetch the article URL: %s" % error) from error
     except (LxmlError, OSError, TypeError, ValueError) as error:
         raise ArticleExtractionError(
-            "Could not extract an article from the URL") from error
+            "Could not extract an article from the URL: %s" % error) from error
 
     if not (article and article.cleaned_text and article.title):
         raise ArticleExtractionError(
