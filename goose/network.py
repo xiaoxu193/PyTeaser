@@ -220,12 +220,6 @@ def fetch_bytes(config, url, max_bytes, accepted_content_types=None):
 
 class HtmlFetcher:
 
-    def __init__(self):
-        pass
-
-    def get_http_client(self):
-        pass
-
     def get_html(self, config, url):
         """\
         Fetch an HTML document or raise FetchError when the request fails.
