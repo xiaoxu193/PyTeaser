@@ -224,6 +224,16 @@ class TestSummarize(TestCase):
             ["Researchers confirmed several findings."],
         )
 
+    def test_every_supported_language_has_stopwords(self):
+        from pyteaser import _SUPPORTED_LANGUAGES, _load_stop_words
+
+        for language in sorted(_SUPPORTED_LANGUAGES):
+            stop_words = _load_stop_words(language)
+            self.assertTrue(
+                stop_words, "empty stopword list for %s" % language)
+            self.assertTrue(all(
+                word == word.casefold() for word in stop_words), language)
+
     def test_topic_words_are_not_filtered_as_stopwords(self):
         self.assertNotIn("government", stopWords)
         self.assertNotIn("police", stopWords)
