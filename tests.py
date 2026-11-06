@@ -773,7 +773,6 @@ class TestImageFileSafety(TestCase):
                 request_timeout=1,
                 allow_private_network=False,
                 browser_user_agent="PyTeaser test",
-                imagemagick_identify_path="",
             )
             src = "https://1.1.1.1/not-an-image.jpg"
             local_path = ImageUtils.get_localfile_name("article", src, config)

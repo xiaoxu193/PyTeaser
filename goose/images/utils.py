@@ -34,7 +34,7 @@ from goose.images.image import LocallyStoredImage
 class ImageUtils:
 
     @classmethod
-    def get_image_dimensions(cls, identify_program, path):
+    def get_image_dimensions(cls, path):
         try:
             from PIL import Image
         except ImportError as error:
@@ -102,9 +102,8 @@ class ImageUtils:
             image_bytes = os.path.getsize(local_image_name)
             if image_bytes <= 0 or image_bytes > config.max_image_bytes:
                 return None
-            identify = config.imagemagick_identify_path
             try:
-                image_details = cls.get_image_dimensions(identify, local_image_name)
+                image_details = cls.get_image_dimensions(local_image_name)
             except (OSError, ValueError):
                 return None
             file_extension = cls.get_mime_type(image_details)

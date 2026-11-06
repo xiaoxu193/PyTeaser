@@ -53,13 +53,6 @@ class Configuration:
         # default stopwords class
         self.stopwords_class = StopWords
 
-        # path to your imagemagick convert executable,
-        # on the mac using mac ports this is the default listed
-        self.imagemagick_convert_path = "/opt/local/bin/convert"
-
-        # path to your imagemagick identify executable
-        self.imagemagick_identify_path = "/opt/local/bin/identify"
-
         # used as the user agent that
         # is sent with your web requests to extract an article
         # self.browser_user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2)"\
