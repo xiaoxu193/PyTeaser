@@ -49,7 +49,6 @@ class Crawler:
         self.config = config
         # parser
         self.parser = self.config.get_parser()
-        self.logPrefix = "crawler:"
 
     def crawl(self, crawl_candidate):
         article = Article()
