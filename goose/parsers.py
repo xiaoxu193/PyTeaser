@@ -49,8 +49,7 @@ class Parser:
     @classmethod
     def fromstring(cls, html):
         html = encodeValue(html)
-        cls.doc = lxml.html.fromstring(html)
-        return cls.doc
+        return lxml.html.fromstring(html)
 
     @classmethod
     def nodeToString(cls, node):
@@ -244,5 +243,4 @@ class ParserSoup(Parser):
                 "The soup parser requires BeautifulSoup; install pyteaser[soup]."
             ) from error
         html = encodeValue(html)
-        cls.doc = soupparser.fromstring(html)
-        return cls.doc
+        return soupparser.fromstring(html)
