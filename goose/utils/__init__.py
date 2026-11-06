@@ -80,7 +80,7 @@ class BuildURL:
 class FileHelper:
 
     @classmethod
-    def loadResourceFile(self, filename):
+    def loadResourceFile(cls, filename):
         if not os.path.isabs(filename):
             dirpath = os.path.dirname(goose.__file__)
             path = os.path.join(dirpath, 'resources', filename)
@@ -103,7 +103,7 @@ class ParsingCandidate:
 
 class RawHelper:
     @classmethod
-    def get_parsing_candidate(self, url, raw_html):
+    def get_parsing_candidate(cls, url, raw_html):
         if isinstance(raw_html, str):
             raw_html = raw_html.encode('utf-8')
         link_hash = '%s.%s' % (hashlib.md5(raw_html).hexdigest(), time.time())
@@ -112,7 +112,7 @@ class RawHelper:
 
 class URLHelper:
     @classmethod
-    def get_parsing_candidate(self, url_to_crawl):
+    def get_parsing_candidate(cls, url_to_crawl):
         # replace shebang is urls
         final_url = url_to_crawl.replace('#!', '?_escaped_fragment_=') \
                     if '#!' in url_to_crawl else url_to_crawl
