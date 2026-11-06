@@ -250,6 +250,12 @@ class TestSummarize(TestCase):
 
         self.assertEqual(words, ["研究者", "公布", "新发现"])
 
+    def test_chinese_tokenizer_falls_back_without_jieba(self):
+        with patch.dict("sys.modules", {"jieba": None}):
+            words = split_words("研究者公布新发现！", language="zh")
+
+        self.assertEqual(words, ["研", "究", "者", "公", "布", "新", "发", "现"])
+
     def test_unsupported_language_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "Unsupported language"):
             Summarize("Title", "Article text.", language="xx")
