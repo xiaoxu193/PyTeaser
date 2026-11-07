@@ -19,6 +19,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+
 import lxml.html
 from lxml import etree
 from copy import deepcopy
@@ -27,11 +28,10 @@ from goose.text import encodeValue
 
 
 class Parser:
-
     @classmethod
     def xpath_re(cls, node, expression):
         regexp_namespace = "http://exslt.org/regular-expressions"
-        items = node.xpath(expression, namespaces={'re': regexp_namespace})
+        items = node.xpath(expression, namespaces={"re": regexp_namespace})
         return items
 
     @classmethod
@@ -75,7 +75,7 @@ class Parser:
     def getElementsByTag(cls, node, tag=None, attr=None, value=None, childs=False):
         NS = "http://exslt.org/regular-expressions"
         # selector = tag or '*'
-        selector = 'descendant-or-self::%s' % (tag or '*')
+        selector = "descendant-or-self::%s" % (tag or "*")
         if attr and value:
             selector = '%s[re:test(@%s, "%s", "i")]' % (selector, attr, value)
         elems = node.xpath(selector, namespaces={"re": NS})
@@ -101,18 +101,18 @@ class Parser:
         if root.text:
             t = lxml.html.HtmlElement()
             t.text = root.text
-            t.tag = 'text'
+            t.tag = "text"
             root.text = None
             root.insert(0, t)
         # loop childs
         for c, n in enumerate(list(root)):
             idx = root.index(n)
             # don't process texts nodes
-            if n.tag == 'text':
+            if n.tag == "text":
                 continue
             # create a text node for tail
             if n.tail:
-                t = cls.createElement(tag='text', text=n.tail, tail=None)
+                t = cls.createElement(tag="text", text=n.tail, tail=None)
                 root.insert(idx + 1, t)
         return list(root)
 
@@ -126,7 +126,7 @@ class Parser:
 
     @classmethod
     def getElementsByTags(cls, node, tags):
-        selector = ','.join(tags)
+        selector = ",".join(tags)
         elems = cls.css_select(node, selector)
         # remove the root node
         # if we have a selection tag
@@ -135,7 +135,7 @@ class Parser:
         return elems
 
     @classmethod
-    def createElement(cls, tag='p', text=None, tail=None):
+    def createElement(cls, tag="p", text=None, tail=None):
         t = lxml.html.HtmlElement()
         t.tag = tag
         t.text = text
@@ -144,7 +144,7 @@ class Parser:
 
     @classmethod
     def getComments(cls, node):
-        return node.xpath('//comment()')
+        return node.xpath("//comment()")
 
     @classmethod
     def getParent(cls, node):
@@ -158,12 +158,12 @@ class Parser:
                 prev = node.getprevious()
                 if prev is None:
                     if not parent.text:
-                        parent.text = ''
-                    parent.text += ' ' + node.tail
+                        parent.text = ""
+                    parent.text += " " + node.tail
                 else:
                     if not prev.tail:
-                        prev.tail = ''
-                    prev.tail += ' ' + node.tail
+                        prev.tail = ""
+                    prev.tail += " " + node.tail
             node.clear()
             parent.remove(node)
 
@@ -174,7 +174,7 @@ class Parser:
     @classmethod
     def getText(cls, node):
         txts = [i for i in node.itertext()]
-        return innerTrim(' '.join(txts).strip())
+        return innerTrim(" ".join(txts).strip())
 
     @classmethod
     def previousSiblings(cls, node):
@@ -203,7 +203,7 @@ class Parser:
 
     @classmethod
     def isTextNode(cls, node):
-        return True if node.tag == 'text' else False
+        return True if node.tag == "text" else False
 
     @classmethod
     def getAttribute(cls, node, attr=None):
@@ -233,7 +233,6 @@ class Parser:
 
 
 class ParserSoup(Parser):
-
     @classmethod
     def fromstring(cls, html):
         try:

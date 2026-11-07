@@ -45,7 +45,11 @@ class TestNetworkPolicy(TestCase):
         handler = SafeRedirectHandler()
         with self.assertRaises(ValueError):
             handler.redirect_request(
-                Request("https://1.1.1.1/"), None, 302, "Found", {},
+                Request("https://1.1.1.1/"),
+                None,
+                302,
+                "Found",
+                {},
                 "http://127.0.0.1/",
             )
 
@@ -58,13 +62,16 @@ class TestNetworkPolicy(TestCase):
         "goose.network.socket.getaddrinfo",
         return_value=[(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("1.1.1.1", 80))],
     )
-    def test_http_connection_uses_the_validated_ip(self, getaddrinfo, create_connection):
+    def test_http_connection_uses_the_validated_ip(
+        self, getaddrinfo, create_connection
+    ):
         connection = _SafeHTTPConnection("article.example", 80, timeout=2)
 
         connection.connect()
 
         create_connection.assert_called_once_with(
-            ("1.1.1.1", 80), timeout=2, source_address=None)
+            ("1.1.1.1", 80), timeout=2, source_address=None
+        )
         getaddrinfo.assert_called_once()
 
     @patch("goose.network.build_opener")
@@ -82,8 +89,7 @@ class TestNetworkPolicy(TestCase):
         opener = build_opener_mock.return_value
         opener.open.return_value = response
 
-        content = fetch_bytes(
-            config, "https://1.1.1.1/", 4, {"text/html"})
+        content = fetch_bytes(config, "https://1.1.1.1/", 4, {"text/html"})
 
         self.assertEqual(content, b"page")
         self.assertEqual(opener.open.call_args.kwargs["timeout"], 2.5)
@@ -123,6 +129,5 @@ class TestNetworkPolicy(TestCase):
         self.assertEqual(fetch_bytes(config, url, 1024, {"text/html"}), body)
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest_main()

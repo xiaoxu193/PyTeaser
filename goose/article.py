@@ -22,7 +22,6 @@ limitations under the License.
 
 
 class Article:
-
     def __init__(self):
         # title of the article
         self.title = None

@@ -19,6 +19,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+
 import time
 import hashlib
 import re
@@ -48,15 +49,14 @@ class BuildURL:
             oo = urlparse.urlparse(self.finalurl)
             if oo.scheme:
                 return oo.scheme
-        return 'http'
+        return "http"
 
     def getUrl(self):
         """\
 
         """
         candidate = (
-            urlparse.urljoin(self.finalurl, self.url)
-            if self.finalurl else self.url
+            urlparse.urljoin(self.finalurl, self.url) if self.finalurl else self.url
         )
         url_obj = urlparse.urlparse(candidate)
         scheme = self.getScheme(url_obj)
@@ -67,27 +67,28 @@ class BuildURL:
         netloc = url_obj.netloc or hostname
         if not url_obj.netloc and url_obj.port:
             netloc = "%s:%s" % (hostname, url_obj.port)
-        return urlparse.urlunparse((
-            scheme,
-            netloc,
-            url_obj.path,
-            url_obj.params,
-            url_obj.query,
-            url_obj.fragment,
-        ))
+        return urlparse.urlunparse(
+            (
+                scheme,
+                netloc,
+                url_obj.path,
+                url_obj.params,
+                url_obj.query,
+                url_obj.fragment,
+            )
+        )
 
 
 class FileHelper:
-
     @classmethod
     def loadResourceFile(cls, filename):
         if not os.path.isabs(filename):
             dirpath = os.path.dirname(goose.__file__)
-            path = os.path.join(dirpath, 'resources', filename)
+            path = os.path.join(dirpath, "resources", filename)
         else:
             path = filename
         try:
-            with open(path, 'r', encoding='utf-8') as f:
+            with open(path, "r", encoding="utf-8") as f:
                 content = f.read()
             return content
         except IOError:
@@ -95,7 +96,6 @@ class FileHelper:
 
 
 class ParsingCandidate:
-
     def __init__(self, urlString, link_hash):
         self.urlString = self.url = urlString
         self.link_hash = link_hash
@@ -105,8 +105,8 @@ class RawHelper:
     @classmethod
     def get_parsing_candidate(cls, url, raw_html):
         if isinstance(raw_html, str):
-            raw_html = raw_html.encode('utf-8')
-        link_hash = '%s.%s' % (hashlib.md5(raw_html).hexdigest(), time.time())
+            raw_html = raw_html.encode("utf-8")
+        link_hash = "%s.%s" % (hashlib.md5(raw_html).hexdigest(), time.time())
         return ParsingCandidate(url, link_hash)
 
 
@@ -114,10 +114,15 @@ class URLHelper:
     @classmethod
     def get_parsing_candidate(cls, url_to_crawl):
         # replace shebang is urls
-        final_url = url_to_crawl.replace('#!', '?_escaped_fragment_=') \
-                    if '#!' in url_to_crawl else url_to_crawl
-        link_hash = '%s.%s' % (
-            hashlib.md5(final_url.encode('utf-8')).hexdigest(), time.time())
+        final_url = (
+            url_to_crawl.replace("#!", "?_escaped_fragment_=")
+            if "#!" in url_to_crawl
+            else url_to_crawl
+        )
+        link_hash = "%s.%s" % (
+            hashlib.md5(final_url.encode("utf-8")).hexdigest(),
+            time.time(),
+        )
         return ParsingCandidate(final_url, link_hash)
 
 
@@ -125,6 +130,7 @@ class StringSplitter:
     """\
 
     """
+
     def __init__(self, pattern):
         self.pattern = re.compile(pattern)
 
@@ -135,25 +141,23 @@ class StringSplitter:
 
 
 class StringReplacement:
-
     def __init__(self, pattern, replaceWith):
         self.pattern = pattern
         self.replaceWith = replaceWith
 
     def replaceAll(self, string):
         if not string:
-            return ''
+            return ""
         return string.replace(self.pattern, self.replaceWith)
 
 
 class ReplaceSequence:
-
     def __init__(self):
         self.replacements = []
 
-    #@classmethod
+    # @classmethod
     def create(self, firstPattern, replaceWith=None):
-        result = StringReplacement(firstPattern, replaceWith or '')
+        result = StringReplacement(firstPattern, replaceWith or "")
         self.replacements.append(result)
         return self
 
@@ -162,7 +166,7 @@ class ReplaceSequence:
 
     def replaceAll(self, string):
         if not string:
-            return ''
+            return ""
 
         mutatedString = string
 

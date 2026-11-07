@@ -24,7 +24,8 @@ class TestGooseExtraction(TestCase):
         </article></body></html>"""
 
         article = Goose({"enable_image_fetching": False}).extract(
-            raw_html=html.encode("utf-8"))
+            raw_html=html.encode("utf-8")
+        )
 
         self.assertEqual(article.title, "Test article")
         self.assertIn("Python compatibility", article.cleaned_text)
@@ -50,8 +51,7 @@ class TestGooseExtraction(TestCase):
         Four sentence is here. Five sentence is here. Six sentence is here.</p></article></body></html>"""
 
         with patch.object(HtmlFetcher, "get_html", return_value=html):
-            summaries = SummarizeUrl(
-                "https://example.test/article", sentence_count=2)
+            summaries = SummarizeUrl("https://example.test/article", sentence_count=2)
 
         self.assertEqual(len(summaries), 2)
 
@@ -78,7 +78,8 @@ class TestGooseExtraction(TestCase):
 
         with patch("pyteaser.grab_link", return_value=article):
             summaries = summarize_url(
-                "https://example.test/article", sentence_count=1, max_words=10)
+                "https://example.test/article", sentence_count=1, max_words=10
+            )
 
         self.assertEqual(len(summaries), 1)
 
@@ -133,17 +134,22 @@ class TestGooseExtraction(TestCase):
           <p>This sufficiently long paragraph validates article metadata extractor hooks.</p>
           <p>This second long paragraph ensures standard article content is still extracted.</p>
         </article></body></html>"""
-        article = Goose({
-            "enable_image_fetching": False,
-            "extract_publishdate": PublishDateExtractor(),
-            "additional_data_extractor": AdditionalDataExtractor(),
-        }).extract(raw_html=html)
+        article = Goose(
+            {
+                "enable_image_fetching": False,
+                "extract_publishdate": PublishDateExtractor(),
+                "additional_data_extractor": AdditionalDataExtractor(),
+            }
+        ).extract(raw_html=html)
 
         self.assertEqual(article.publish_date, "2025-02-03")
-        self.assertEqual(article.additional_data, {
-            "section": "science",
-            "reviewed": True,
-        })
+        self.assertEqual(
+            article.additional_data,
+            {
+                "section": "science",
+                "reviewed": True,
+            },
+        )
 
     def test_publication_date_is_extracted_from_article_meta(self):
         html = """<html><head>
@@ -199,7 +205,5 @@ class TestGooseExtraction(TestCase):
         self.assertEqual(article.title, "Structured article headline")
 
 
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest_main()

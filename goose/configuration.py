@@ -19,6 +19,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+
 import os
 import tempfile
 from goose.text import StopWords
@@ -28,7 +29,6 @@ from goose.version import __version__
 
 
 class Configuration:
-
     def __init__(self):
         # What's the minimum bytes for an image we'd accept is,
         # alot of times we want to filter out the author's little images
@@ -48,7 +48,7 @@ class Configuration:
         # it will be use as fallback
         # if use_meta_language is set to false, targetlanguage will
         # be use
-        self.target_language = 'en'
+        self.target_language = "en"
 
         # default stopwords class
         self.stopwords_class = StopWords
@@ -58,7 +58,7 @@ class Configuration:
         # self.browser_user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2)"\
         #                         " AppleWebKit/534.52.7 (KHTML, like Gecko) "\
         #                         "Version/5.1.2 Safari/534.52.7"
-        self.browser_user_agent = 'Goose/%s' % __version__
+        self.browser_user_agent = "Goose/%s" % __version__
 
         # Network safety and resource limits for article/image downloads.
         self.request_timeout = 10.0
@@ -78,14 +78,14 @@ class Configuration:
         self.additional_data_extractor = None
 
         # Parser type
-        self.parser_class = 'lxml'
+        self.parser_class = "lxml"
 
     @property
     def local_storage_path(self):
-        return os.path.join(tempfile.gettempdir(), 'goose')
+        return os.path.join(tempfile.gettempdir(), "goose")
 
     def get_parser(self):
-        return Parser if self.parser_class == 'lxml' else ParserSoup
+        return Parser if self.parser_class == "lxml" else ParserSoup
 
     def get_publishdate_extractor(self):
         return self.extract_publishdate

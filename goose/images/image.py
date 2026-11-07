@@ -22,7 +22,6 @@ limitations under the License.
 
 
 class Image:
-
     def __init__(self):
         # holds the Element node of the image we think is top dog
         self.top_image_node = None
@@ -52,7 +51,6 @@ class Image:
 
 
 class ImageDetails:
-
     def __init__(self):
 
         # the width of the image
@@ -84,9 +82,16 @@ class ImageDetails:
 
 
 class LocallyStoredImage:
-
-    def __init__(self, src='', local_filename='',
-        link_hash='', bytes=int(0), file_extension='', height=0, width=0):
+    def __init__(
+        self,
+        src="",
+        local_filename="",
+        link_hash="",
+        bytes=int(0),
+        file_extension="",
+        height=0,
+        width=0,
+    ):
         self.src = src
         self.local_filename = local_filename
         self.link_hash = link_hash

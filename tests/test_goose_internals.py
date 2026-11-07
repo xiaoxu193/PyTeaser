@@ -45,8 +45,7 @@ class TestGooseLanguageSelection(TestCase):
 
         self.assertEqual(stats.get_word_count(), 6)
         self.assertGreater(stats.get_stopword_count(), 0)
-        self.assertIs(
-            stopwords_class_for_language("zh", StopWords), StopWordsChinese)
+        self.assertIs(stopwords_class_for_language("zh", StopWords), StopWordsChinese)
 
 
 class TestGooseInitialization(TestCase):
@@ -63,7 +62,5 @@ class TestGooseInitialization(TestCase):
             self.assertFalse(os.path.exists(os.path.join(storage_path, "test.txt")))
 
 
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest_main()

@@ -19,6 +19,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+
 import hashlib
 import os
 import warnings
@@ -32,7 +33,6 @@ from goose.images.image import LocallyStoredImage
 
 
 class ImageUtils:
-
     @classmethod
     def get_image_dimensions(cls, path):
         try:
@@ -83,17 +83,17 @@ class ImageUtils:
 
     @classmethod
     def get_mime_type(cls, image_details):
-        mime_type = (image_details.get_mime_type() or '').lower()
+        mime_type = (image_details.get_mime_type() or "").lower()
         mimes = {
-            'png': '.png',
-            'jpg': '.jpg',
-            'jpeg': '.jpg',
-            'gif': '.gif',
-            'webp': '.webp',
-            'bmp': '.bmp',
-            'tiff': '.tiff',
+            "png": ".png",
+            "jpg": ".jpg",
+            "jpeg": ".jpg",
+            "gif": ".gif",
+            "webp": ".webp",
+            "bmp": ".bmp",
+            "tiff": ".tiff",
         }
-        return mimes.get(mime_type, 'NA')
+        return mimes.get(mime_type, "NA")
 
     @classmethod
     def read_localfile(cls, link_hash, src, config):
@@ -114,14 +114,14 @@ class ImageUtils:
                 bytes=image_bytes,
                 file_extension=file_extension,
                 height=image_details.get_height(),
-                width=image_details.get_width()
+                width=image_details.get_width(),
             )
         return None
 
     @classmethod
     def write_localfile(cls, entity, link_hash, src, config):
         local_path = cls.get_localfile_name(link_hash, src, config)
-        with open(local_path, 'wb') as image_file:
+        with open(local_path, "wb") as image_file:
             image_file.write(entity)
         try:
             image = cls.read_localfile(link_hash, src, config)
@@ -142,7 +142,9 @@ class ImageUtils:
     @classmethod
     def get_localfile_name(cls, link_hash, src, config):
         image_hash = hashlib.md5(smart_str(src)).hexdigest()
-        return os.path.join(config.local_storage_path, '%s_%s' % (link_hash, image_hash))
+        return os.path.join(
+            config.local_storage_path, "%s_%s" % (link_hash, image_hash)
+        )
 
     @classmethod
     def clean_src_string(cls, src):

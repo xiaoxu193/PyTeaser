@@ -21,31 +21,44 @@ from pyteaser import (
 
 class TestSummarize(TestCase):
     def test_text(self):
-        article_title = u'Framework for Partitioning and Execution of Data Stream Applications in Mobile Cloud Computing'
-        article_text = u'The contribution of cloud computing and mobile computing technologies lead to the newly emerging mobile cloud com- puting paradigm. Three major approaches have been pro- posed for mobile cloud applications: 1) extending the access to cloud services to mobile devices; 2) enabling mobile de- vices to work collaboratively as cloud resource providers; 3) augmenting the execution of mobile applications on portable devices using cloud resources. In this paper, we focus on the third approach in supporting mobile data stream applica- tions. More specifically, we study how to optimize the com- putation partitioning of a data stream application between mobile and cloud to achieve maximum speed/throughput in processing the streaming data. To the best of our knowledge, it is the first work to study the partitioning problem for mobile data stream applica- tions, where the optimization is placed on achieving high throughput of processing the streaming data rather than minimizing the makespan of executions as in other appli- cations. We first propose a framework to provide runtime support for the dynamic computation partitioning and exe- cution of the application. Different from existing works, the framework not only allows the dynamic partitioning for a single user but also supports the sharing of computation in- stances among multiple users in the cloud to achieve efficient utilization of the underlying cloud resources. Meanwhile, the framework has better scalability because it is designed on the elastic cloud fabrics. Based on the framework, we design a genetic algorithm for optimal computation parti- tion. Both numerical evaluation and real world experiment have been performed, and the results show that the par- titioned application can achieve at least two times better performance in terms of throughput than the application without partitioning.'
+        article_title = "Framework for Partitioning and Execution of Data Stream Applications in Mobile Cloud Computing"
+        article_text = "The contribution of cloud computing and mobile computing technologies lead to the newly emerging mobile cloud com- puting paradigm. Three major approaches have been pro- posed for mobile cloud applications: 1) extending the access to cloud services to mobile devices; 2) enabling mobile de- vices to work collaboratively as cloud resource providers; 3) augmenting the execution of mobile applications on portable devices using cloud resources. In this paper, we focus on the third approach in supporting mobile data stream applica- tions. More specifically, we study how to optimize the com- putation partitioning of a data stream application between mobile and cloud to achieve maximum speed/throughput in processing the streaming data. To the best of our knowledge, it is the first work to study the partitioning problem for mobile data stream applica- tions, where the optimization is placed on achieving high throughput of processing the streaming data rather than minimizing the makespan of executions as in other appli- cations. We first propose a framework to provide runtime support for the dynamic computation partitioning and exe- cution of the application. Different from existing works, the framework not only allows the dynamic partitioning for a single user but also supports the sharing of computation in- stances among multiple users in the cloud to achieve efficient utilization of the underlying cloud resources. Meanwhile, the framework has better scalability because it is designed on the elastic cloud fabrics. Based on the framework, we design a genetic algorithm for optimal computation parti- tion. Both numerical evaluation and real world experiment have been performed, and the results show that the par- titioned application can achieve at least two times better performance in terms of throughput than the application without partitioning."
 
-        summarised_article_text = [u'The contribution of cloud computing and mobile computing technologies lead to the newly emerging mobile cloud com- puting paradigm.', u'Three major approaches have been pro- posed for mobile cloud applications: 1) extending the access to cloud services to mobile devices; 2) enabling mobile de- vices to work collaboratively as cloud resource providers; 3) augmenting the execution of mobile applications on portable devices using cloud resources.', u'In this paper, we focus on the third approach in supporting mobile data stream applica- tions.', u'More specifically, we study how to optimize the com- putation partitioning of a data stream application between mobile and cloud to achieve maximum speed/throughput in processing the streaming data.', u'We first propose a framework to provide runtime support for the dynamic computation partitioning and exe- cution of the application.']
+        summarised_article_text = [
+            "The contribution of cloud computing and mobile computing technologies lead to the newly emerging mobile cloud com- puting paradigm.",
+            "Three major approaches have been pro- posed for mobile cloud applications: 1) extending the access to cloud services to mobile devices; 2) enabling mobile de- vices to work collaboratively as cloud resource providers; 3) augmenting the execution of mobile applications on portable devices using cloud resources.",
+            "In this paper, we focus on the third approach in supporting mobile data stream applica- tions.",
+            "More specifically, we study how to optimize the com- putation partitioning of a data stream application between mobile and cloud to achieve maximum speed/throughput in processing the streaming data.",
+            "We first propose a framework to provide runtime support for the dynamic computation partitioning and exe- cution of the application.",
+        ]
 
-        self.assertEqual(Summarize(article_title, article_text),
-                         summarised_article_text)
+        self.assertEqual(
+            Summarize(article_title, article_text), summarised_article_text
+        )
 
     def test_short_article_returns_its_sentences(self):
         self.assertEqual(
-            Summarize(u"A short article.", u"First sentence. Second sentence."),
-            [u"First sentence.", u"Second sentence."],
+            Summarize("A short article.", "First sentence. Second sentence."),
+            ["First sentence.", "Second sentence."],
         )
 
     def test_blank_text_returns_empty_summary(self):
         self.assertEqual(Summarize("Title", " \n\t "), [])
 
     def test_missing_title_and_utf8_bytes_are_supported(self):
-        self.assertEqual(Summarize(None, "First sentence. Second sentence."), [
-            "First sentence.",
-            "Second sentence.",
-        ])
-        self.assertEqual(Summarize("Café".encode("utf-8"), "Café matters.".encode("utf-8")), [
-            "Café matters.",
-        ])
+        self.assertEqual(
+            Summarize(None, "First sentence. Second sentence."),
+            [
+                "First sentence.",
+                "Second sentence.",
+            ],
+        )
+        self.assertEqual(
+            Summarize("Café".encode("utf-8"), "Café matters.".encode("utf-8")),
+            [
+                "Café matters.",
+            ],
+        )
 
     def test_pep8_text_api_matches_legacy_name(self):
         text = "Researchers announced a discovery. Experts reviewed the evidence."
@@ -86,15 +99,14 @@ class TestSummarize(TestCase):
 
         with patch("pyteaser.score", return_value=ranked):
             summary = Summarize(
-                "Results", " ".join(sentences), sentence_count=2, max_words=3)
+                "Results", " ".join(sentences), sentence_count=2, max_words=3
+            )
 
         self.assertEqual(summary, [sentences[1]])
-        self.assertLessEqual(
-            sum(len(split_words(sentence)) for sentence in summary), 3)
+        self.assertLessEqual(sum(len(split_words(sentence)) for sentence in summary), 3)
 
     def test_max_words_is_validated_and_can_be_zero(self):
-        self.assertEqual(
-            Summarize("Title", "Some words here.", max_words=0), [])
+        self.assertEqual(Summarize("Title", "Some words here.", max_words=0), [])
         with self.assertRaisesRegex(ValueError, "max_words"):
             Summarize("Title", "Some words here.", max_words=-1)
         with self.assertRaisesRegex(TypeError, "max_words"):
@@ -107,8 +119,7 @@ class TestSummarize(TestCase):
             ["Topic drives the result.", "Other facts matter."],
             ["topic"],
             {},
-            weights=ScoringWeights(
-                title=1.0, frequency=0.0, length=0.0, position=0.0),
+            weights=ScoringWeights(title=1.0, frequency=0.0, length=0.0, position=0.0),
         )
 
         self.assertEqual(ranked[0][2], 1.0)
@@ -128,10 +139,14 @@ class TestSummarize(TestCase):
         self.assertEqual(len(details), 2)
         self.assertTrue(all(isinstance(result.index, int) for result in details))
         self.assertTrue(all(isinstance(result.score, float) for result in details))
-        self.assertEqual([result.sentence for result in details],
-                         Summarize(title, text, sentence_count=2))
-        self.assertEqual([result.index for result in details],
-                         sorted(result.index for result in details))
+        self.assertEqual(
+            [result.sentence for result in details],
+            Summarize(title, text, sentence_count=2),
+        )
+        self.assertEqual(
+            [result.index for result in details],
+            sorted(result.index for result in details),
+        )
 
     def test_invalid_scoring_weights_are_rejected(self):
         with self.assertRaisesRegex(ValueError, "non-negative"):
@@ -229,10 +244,10 @@ class TestSummarize(TestCase):
 
         for language in sorted(_SUPPORTED_LANGUAGES):
             stop_words = _load_stop_words(language)
+            self.assertTrue(stop_words, "empty stopword list for %s" % language)
             self.assertTrue(
-                stop_words, "empty stopword list for %s" % language)
-            self.assertTrue(all(
-                word == word.casefold() for word in stop_words), language)
+                all(word == word.casefold() for word in stop_words), language
+            )
 
     def test_topic_words_are_not_filtered_as_stopwords(self):
         self.assertNotIn("government", stopWords)
@@ -244,7 +259,8 @@ class TestSummarize(TestCase):
 
     def test_language_specific_stopwords_are_used(self):
         spanish_keywords = keywords(
-            "El gobierno anuncia una nueva reforma", language="es")
+            "El gobierno anuncia una nueva reforma", language="es"
+        )
 
         self.assertNotIn("el", spanish_keywords)
         self.assertNotIn("una", spanish_keywords)
@@ -290,7 +306,5 @@ class TestSummarize(TestCase):
         self.assertEqual([result[1] for result in ranked], [repeated, repeated])
 
 
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest_main()

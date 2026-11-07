@@ -27,8 +27,15 @@ def is_protected_type(obj):
     """Return whether ``obj`` is a scalar that should remain unchanged."""
     return isinstance(
         obj,
-        (type(None), int, float, Decimal, datetime.datetime, datetime.date,
-         datetime.time),
+        (
+            type(None),
+            int,
+            float,
+            Decimal,
+            datetime.datetime,
+            datetime.date,
+            datetime.time,
+        ),
     )
 
 

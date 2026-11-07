@@ -19,6 +19,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+
 import re
 import os
 from urllib.parse import urlparse, urljoin
@@ -35,7 +36,6 @@ KNOWN_IMG_DOM_NAMES = [
 
 
 class DepthTraversal:
-
     def __init__(self, node, parent_depth, sibling_depth):
         self.node = node
         self.parent_depth = parent_depth
@@ -47,7 +47,6 @@ class ImageExtractor:
 
 
 class UpgradedImageIExtractor(ImageExtractor):
-
     def __init__(self, http_client, article, config):
         self.custom_site_mapping = {}
         self.load_customesite_mapping()
@@ -122,19 +121,22 @@ class UpgradedImageIExtractor(ImageExtractor):
         if good_images:
             scored_images = self.fetch_images(good_images, parent_depth_level)
             if scored_images:
-                highscore_image = sorted(scored_images.items(),
-                                        key=lambda x: x[1], reverse=True)[0][0]
+                highscore_image = sorted(
+                    scored_images.items(), key=lambda x: x[1], reverse=True
+                )[0][0]
                 main_image = Image()
                 main_image.src = highscore_image.src
                 main_image.extraction_type = "bigimage"
-                main_image.confidence_score = 100 / len(scored_images) \
-                                    if len(scored_images) > 0 else 0
+                main_image.confidence_score = (
+                    100 / len(scored_images) if len(scored_images) > 0 else 0
+                )
                 return main_image
 
         depth_obj = self.get_depth_level(node, parent_depth_level, sibling_depth_level)
         if depth_obj:
-            return self.check_large_images(depth_obj.node,
-                            depth_obj.parent_depth, depth_obj.sibling_depth)
+            return self.check_large_images(
+                depth_obj.node, depth_obj.parent_depth, depth_obj.sibling_depth
+            )
 
         return None
 
@@ -181,7 +183,7 @@ class UpgradedImageIExtractor(ImageExtractor):
             src = local_image.src
             file_extension = local_image.file_extension
 
-            if file_extension in ('.gif', 'NA'):
+            if file_extension in (".gif", "NA"):
                 continue
             if depth_level >= 1 and local_image.width <= 300:
                 continue
@@ -243,7 +245,7 @@ class UpgradedImageIExtractor(ImageExtractor):
         return False
 
     def get_node_images(self, node):
-        images = self.parser.getElementsByTag(node, tag='img')
+        images = self.parser.getElementsByTag(node, tag="img")
         if images is not None and len(images) < 1:
             return None
         return images
@@ -298,8 +300,13 @@ class UpgradedImageIExtractor(ImageExtractor):
                 return max(candidates, key=lambda candidate: candidate[0])[1]
 
         for attr in (
-                "data-src", "data-lazy-src", "data-original-src",
-                "data-original", "data-url", "src"):
+            "data-src",
+            "data-lazy-src",
+            "data-original-src",
+            "data-original",
+            "data-url",
+            "src",
+        ):
             src = self.parser.getAttribute(image_node, attr=attr)
             if src and not src.strip().lower().startswith("data:"):
                 return src.strip()
@@ -345,11 +352,13 @@ class UpgradedImageIExtractor(ImageExtractor):
         find open link_src on this page
         """
         node = self.article.raw_doc
-        meta = self.parser.getElementsByTag(node, tag='link', attr='rel', value='image_src')
+        meta = self.parser.getElementsByTag(
+            node, tag="link", attr="rel", value="image_src"
+        )
         for item in meta:
-            src = self.parser.getAttribute(item, attr='href')
+            src = self.parser.getAttribute(item, attr="href")
             if src:
-                return self.get_image(item, src, extraction_type='linktag')
+                return self.get_image(item, src, extraction_type="linktag")
         return None
 
     def check_opengraph_tag(self):
@@ -358,24 +367,25 @@ class UpgradedImageIExtractor(ImageExtractor):
         find open graph tags on this page
         """
         node = self.article.raw_doc
-        meta = self.parser.getElementsByTag(node, tag='meta', attr='property', value='og:image')
+        meta = self.parser.getElementsByTag(
+            node, tag="meta", attr="property", value="og:image"
+        )
         for item in meta:
-            src = self.parser.getAttribute(item, attr='content')
+            src = self.parser.getAttribute(item, attr="content")
             if src:
-                return self.get_image(item, src, extraction_type='opengraph')
+                return self.get_image(item, src, extraction_type="opengraph")
         return None
 
     def get_local_image(self, src):
         """\
         returns the bytes of the image file on disk
         """
-        local_image = ImageUtils.store_image(None,
-                                    self.link_hash, src, self.config)
+        local_image = ImageUtils.store_image(None, self.link_hash, src, self.config)
         return local_image
 
     def get_clean_domain(self):
         if self.article.domain:
-            return self.article.domain.replace('www.', '')
+            return self.article.domain.replace("www.", "")
         return None
 
     def check_known_elements(self):
@@ -390,8 +400,7 @@ class UpgradedImageIExtractor(ImageExtractor):
         domain = self.get_clean_domain()
         known_image_names = list(KNOWN_IMG_DOM_NAMES)
         if domain in self.custom_site_mapping:
-            known_image_names.extend(
-                self.custom_site_mapping[domain].split('|'))
+            known_image_names.extend(self.custom_site_mapping[domain].split("|"))
 
         image = None
         doc = self.article.raw_doc
@@ -400,11 +409,11 @@ class UpgradedImageIExtractor(ImageExtractor):
             image = None
             for element in elements:
                 tag = self.parser.getTag(element)
-                if tag == 'img':
+                if tag == "img":
                     image = element
                     return image
                 else:
-                    images = self.parser.getElementsByTag(element, tag='img')
+                    images = self.parser.getElementsByTag(element, tag="img")
                     if images:
                         image = images[0]
                         return image
@@ -417,16 +426,16 @@ class UpgradedImageIExtractor(ImageExtractor):
             if image is not None:
                 src = self.get_image_src(image)
                 if src:
-                    return self.get_image(image, src, score=90, extraction_type='known')
+                    return self.get_image(image, src, score=90, extraction_type="known")
 
         # check for elements with known classes
         for css in known_image_names:
-            elements = self.parser.getElementsByTag(doc, attr='class', value=css)
+            elements = self.parser.getElementsByTag(doc, attr="class", value=css)
             image = _check_elements(elements)
             if image is not None:
                 src = self.get_image_src(image)
                 if src:
-                    return self.get_image(image, src, score=90, extraction_type='known')
+                    return self.get_image(image, src, score=90, extraction_type="known")
 
         return None
 
@@ -447,12 +456,12 @@ class UpgradedImageIExtractor(ImageExtractor):
 
     def load_customesite_mapping(self):
         # TODO
-        path = os.path.join('images', 'known-image-css.txt')
+        path = os.path.join("images", "known-image-css.txt")
         data_file = FileHelper.loadResourceFile(path)
         lines = data_file.splitlines()
         for line in lines:
             line = line.strip()
-            if not line or '^' not in line:
+            if not line or "^" not in line:
                 continue
-            domain, css = line.split('^', 1)
+            domain, css = line.split("^", 1)
             self.custom_site_mapping.update({domain: css})

@@ -16,11 +16,16 @@ class TestCLI(TestCase):
     def test_cli_summarizes_text_and_input_files(self):
         text_output = StringIO()
         with redirect_stdout(text_output):
-            status = main([
-                "--title", "CLI example",
-                "--text", "One sentence. Two sentence.",
-                "--sentence-count", "1",
-            ])
+            status = main(
+                [
+                    "--title",
+                    "CLI example",
+                    "--text",
+                    "One sentence. Two sentence.",
+                    "--sentence-count",
+                    "1",
+                ]
+            )
         self.assertEqual(status, 0)
         self.assertEqual(len(text_output.getvalue().strip().splitlines()), 1)
 
@@ -37,9 +42,18 @@ class TestCLI(TestCase):
 
     def test_cli_is_runnable_as_a_module(self):
         completed = subprocess.run(
-            [sys.executable, "-m", "pyteaser", "--text", "One sentence only.",
-             "--sentence-count", "1"],
-            capture_output=True, text=True, check=True,
+            [
+                sys.executable,
+                "-m",
+                "pyteaser",
+                "--text",
+                "One sentence only.",
+                "--sentence-count",
+                "1",
+            ],
+            capture_output=True,
+            text=True,
+            check=True,
         )
 
         self.assertEqual(completed.stdout.strip(), "One sentence only.")
@@ -56,12 +70,17 @@ class TestCLI(TestCase):
     def test_cli_json_output_reports_scores(self):
         json_output = StringIO()
         with redirect_stdout(json_output):
-            status = main([
-                "--title", "CLI example",
-                "--text", "One sentence. Two sentence.",
-                "--sentence-count", "1",
-                "--json",
-            ])
+            status = main(
+                [
+                    "--title",
+                    "CLI example",
+                    "--text",
+                    "One sentence. Two sentence.",
+                    "--sentence-count",
+                    "1",
+                    "--json",
+                ]
+            )
 
         self.assertEqual(status, 0)
         payload = json.loads(json_output.getvalue())
@@ -89,5 +108,5 @@ class TestCLI(TestCase):
         self.assertIn("Could not fetch", error_output.getvalue())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest_main()

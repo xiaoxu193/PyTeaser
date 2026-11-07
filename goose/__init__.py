@@ -19,6 +19,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+
 import os
 import tempfile
 from goose.version import __version__ as __version__
@@ -32,6 +33,7 @@ class Goose:
     """\
 
     """
+
     def __init__(self, config=None):
         self.config = config or Configuration()
         self.extend_config()
@@ -72,17 +74,18 @@ class Goose:
             ) from error
 
         if not os.path.isdir(storage_path):
-            raise OSError(storage_path +
-                " directory does not seem to exist, "
+            raise OSError(
+                storage_path + " directory does not seem to exist, "
                 "you need to set this for image processing downloads"
             )
 
         try:
             with tempfile.NamedTemporaryFile(
-                    prefix=".goose-write-test-", dir=storage_path, delete=True):
+                prefix=".goose-write-test-", dir=storage_path, delete=True
+            ):
                 pass
         except OSError as error:
-            raise OSError(storage_path +
-                " directory is not writable, "
+            raise OSError(
+                storage_path + " directory is not writable, "
                 "you need to set this for image processing downloads"
             ) from error

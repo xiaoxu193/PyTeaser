@@ -19,6 +19,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+
 import contextlib
 import os
 import glob
@@ -34,7 +35,6 @@ from goose.network import HtmlFetcher
 
 
 class CrawlCandidate:
-
     def __init__(self, config, url, raw_html):
         self.config = config
         # parser
@@ -44,7 +44,6 @@ class CrawlCandidate:
 
 
 class Crawler:
-
     def __init__(self, config):
         self.config = config
         # parser
@@ -82,7 +81,9 @@ class Crawler:
             additional_data = additional_data_extractor.extract(doc)
             if additional_data is not None:
                 if not isinstance(additional_data, dict):
-                    raise TypeError("additional data extractor must return a dict or None")
+                    raise TypeError(
+                        "additional data extractor must return a dict or None"
+                    )
                 article.additional_data.update(additional_data)
 
         article.meta_lang = extractor.get_meta_lang(article)
@@ -104,7 +105,9 @@ class Crawler:
             # image handling
             if self.config.enable_image_fetching:
                 image_extractor = self.get_image_extractor(article)
-                article.top_image = image_extractor.get_best_image(article.raw_doc, article.top_node)
+                article.top_image = image_extractor.get_best_image(
+                    article.raw_doc, article.top_node
+                )
             # post cleanup
             article.top_node = extractor.post_cleanup(article.top_node)
             # clean_text
@@ -117,7 +120,9 @@ class Crawler:
 
     def get_parse_candidate(self, crawl_candidate):
         if crawl_candidate.raw_html:
-            return RawHelper.get_parsing_candidate(crawl_candidate.url, crawl_candidate.raw_html)
+            return RawHelper.get_parsing_candidate(
+                crawl_candidate.url, crawl_candidate.raw_html
+            )
         return URLHelper.get_parsing_candidate(crawl_candidate.url)
 
     def get_html(self, crawl_candidate, parsing_candidate):
@@ -147,7 +152,7 @@ class Crawler:
         return StandardContentExtractor(self.config)
 
     def release_resources(self, article):
-        path = os.path.join(self.config.local_storage_path, '%s_*' % article.link_hash)
+        path = os.path.join(self.config.local_storage_path, "%s_*" % article.link_hash)
         for fname in glob.glob(path):
             with contextlib.suppress(OSError):
                 os.remove(fname)

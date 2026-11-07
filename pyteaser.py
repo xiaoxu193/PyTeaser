@@ -23,61 +23,396 @@ from typing import Sequence
 
 __version__ = "2.0.0"
 
-stopWords = set([
-    "-", " ", ",", ".", "a", "e", "i", "o", "u", "t", "about", "above",
-    "across", "after", "afterwards", "again", "against", "all",
-    "almost", "alone", "along", "already", "also", "although", "always",
-    "am", "among", "amongst", "amoungst", "amount", "an", "and",
-    "another", "any", "anyhow", "anyone", "anything", "anyway",
-    "anywhere", "are", "around", "as", "at", "back", "be", "became",
-    "because", "become", "becomes", "becoming", "been", "before",
-    "beforehand", "behind", "being", "below", "beside", "besides",
-    "between", "beyond", "both", "bottom", "but", "by", "call", "can",
-    "cannot", "can't", "co", "con", "could", "couldn't", "de",
-    "describe", "detail", "did", "do", "done", "down", "due", "during",
-    "each", "eg", "eight", "either", "eleven", "else", "elsewhere",
-    "empty", "enough", "etc", "even", "ever", "every", "everyone",
-    "everything", "everywhere", "except", "few", "fifteen", "fifty",
-    "fill", "find", "fire", "first", "five", "for", "former",
-    "formerly", "forty", "found", "four", "from", "front", "full",
-    "further", "get", "give", "go", "got", "had", "has", "hasnt",
-    "have", "he", "hence", "her", "here", "hereafter", "hereby",
-    "herein", "hereupon", "hers", "herself", "him", "himself", "his",
-    "how", "however", "hundred", "i", "ie", "if", "in", "inc", "indeed",
-    "into", "is", "it", "its", "it's", "itself", "just", "keep", "last",
-    "latter", "latterly", "least", "less", "like", "ltd", "made", "make",
-    "many", "may", "me", "meanwhile", "might", "mill", "mine", "more",
-    "moreover", "most", "mostly", "move", "much", "must", "my", "myself",
-    "name", "namely", "neither", "never", "nevertheless", "new", "next",
-    "nine", "no", "nobody", "none", "noone", "nor", "not", "nothing",
-    "now", "nowhere", "of", "off", "often", "on", "once", "one", "only",
-    "onto", "or", "other", "others", "otherwise", "our", "ours",
-    "ourselves", "out", "over", "own", "part", "people", "per",
-    "perhaps", "please", "put", "rather", "re", "said", "same", "see",
-    "seem", "seemed", "seeming", "seems", "several", "she", "should",
-    "show", "side", "since", "sincere", "six", "sixty", "so", "some",
-    "somehow", "someone", "something", "sometime", "sometimes",
-    "somewhere", "still", "such", "take", "ten", "than", "that", "the",
-    "their", "them", "themselves", "then", "thence", "there",
-    "thereafter", "thereby", "therefore", "therein", "thereupon",
-    "these", "they", "thickv", "thin", "third", "this", "those",
-    "though", "three", "through", "throughout", "thru", "thus", "to",
-    "together", "too", "top", "toward", "towards", "twelve", "twenty",
-    "two", "un", "under", "until", "up", "upon", "us", "use", "very",
-    "via", "want", "was", "we", "well", "were", "what", "whatever",
-    "when", "whence", "whenever", "where", "whereafter", "whereas",
-    "whereby", "wherein", "whereupon", "wherever", "whether", "which",
-    "while", "whither", "who", "whoever", "whole", "whom", "whose",
-    "why", "will", "with", "within", "without", "would", "yet", "you",
-    "your", "yours", "yourself", "yourselves",
-    "monday", "tuesday", "wednesday", "thursday", "friday", "saturday",
-    "sunday", "mon", "tue", "wed", "thu", "fri", "sat", "sun",
-    "1", "10", "2012", "sa", "says", "pm",
-    "2013", "na", "ng", "ang", "year", "years", "percent", "ko", "ako",
-    "yung", "yun", "2", "3", "4", "5", "6", "7", "8", "9", "0", "time",
-    "january", "february", "march", "april", "may", "june", "july",
-    "august", "september", "october", "november", "december",
-])
+stopWords = set(
+    [
+        "-",
+        " ",
+        ",",
+        ".",
+        "a",
+        "e",
+        "i",
+        "o",
+        "u",
+        "t",
+        "about",
+        "above",
+        "across",
+        "after",
+        "afterwards",
+        "again",
+        "against",
+        "all",
+        "almost",
+        "alone",
+        "along",
+        "already",
+        "also",
+        "although",
+        "always",
+        "am",
+        "among",
+        "amongst",
+        "amoungst",
+        "amount",
+        "an",
+        "and",
+        "another",
+        "any",
+        "anyhow",
+        "anyone",
+        "anything",
+        "anyway",
+        "anywhere",
+        "are",
+        "around",
+        "as",
+        "at",
+        "back",
+        "be",
+        "became",
+        "because",
+        "become",
+        "becomes",
+        "becoming",
+        "been",
+        "before",
+        "beforehand",
+        "behind",
+        "being",
+        "below",
+        "beside",
+        "besides",
+        "between",
+        "beyond",
+        "both",
+        "bottom",
+        "but",
+        "by",
+        "call",
+        "can",
+        "cannot",
+        "can't",
+        "co",
+        "con",
+        "could",
+        "couldn't",
+        "de",
+        "describe",
+        "detail",
+        "did",
+        "do",
+        "done",
+        "down",
+        "due",
+        "during",
+        "each",
+        "eg",
+        "eight",
+        "either",
+        "eleven",
+        "else",
+        "elsewhere",
+        "empty",
+        "enough",
+        "etc",
+        "even",
+        "ever",
+        "every",
+        "everyone",
+        "everything",
+        "everywhere",
+        "except",
+        "few",
+        "fifteen",
+        "fifty",
+        "fill",
+        "find",
+        "fire",
+        "first",
+        "five",
+        "for",
+        "former",
+        "formerly",
+        "forty",
+        "found",
+        "four",
+        "from",
+        "front",
+        "full",
+        "further",
+        "get",
+        "give",
+        "go",
+        "got",
+        "had",
+        "has",
+        "hasnt",
+        "have",
+        "he",
+        "hence",
+        "her",
+        "here",
+        "hereafter",
+        "hereby",
+        "herein",
+        "hereupon",
+        "hers",
+        "herself",
+        "him",
+        "himself",
+        "his",
+        "how",
+        "however",
+        "hundred",
+        "i",
+        "ie",
+        "if",
+        "in",
+        "inc",
+        "indeed",
+        "into",
+        "is",
+        "it",
+        "its",
+        "it's",
+        "itself",
+        "just",
+        "keep",
+        "last",
+        "latter",
+        "latterly",
+        "least",
+        "less",
+        "like",
+        "ltd",
+        "made",
+        "make",
+        "many",
+        "may",
+        "me",
+        "meanwhile",
+        "might",
+        "mill",
+        "mine",
+        "more",
+        "moreover",
+        "most",
+        "mostly",
+        "move",
+        "much",
+        "must",
+        "my",
+        "myself",
+        "name",
+        "namely",
+        "neither",
+        "never",
+        "nevertheless",
+        "new",
+        "next",
+        "nine",
+        "no",
+        "nobody",
+        "none",
+        "noone",
+        "nor",
+        "not",
+        "nothing",
+        "now",
+        "nowhere",
+        "of",
+        "off",
+        "often",
+        "on",
+        "once",
+        "one",
+        "only",
+        "onto",
+        "or",
+        "other",
+        "others",
+        "otherwise",
+        "our",
+        "ours",
+        "ourselves",
+        "out",
+        "over",
+        "own",
+        "part",
+        "people",
+        "per",
+        "perhaps",
+        "please",
+        "put",
+        "rather",
+        "re",
+        "said",
+        "same",
+        "see",
+        "seem",
+        "seemed",
+        "seeming",
+        "seems",
+        "several",
+        "she",
+        "should",
+        "show",
+        "side",
+        "since",
+        "sincere",
+        "six",
+        "sixty",
+        "so",
+        "some",
+        "somehow",
+        "someone",
+        "something",
+        "sometime",
+        "sometimes",
+        "somewhere",
+        "still",
+        "such",
+        "take",
+        "ten",
+        "than",
+        "that",
+        "the",
+        "their",
+        "them",
+        "themselves",
+        "then",
+        "thence",
+        "there",
+        "thereafter",
+        "thereby",
+        "therefore",
+        "therein",
+        "thereupon",
+        "these",
+        "they",
+        "thickv",
+        "thin",
+        "third",
+        "this",
+        "those",
+        "though",
+        "three",
+        "through",
+        "throughout",
+        "thru",
+        "thus",
+        "to",
+        "together",
+        "too",
+        "top",
+        "toward",
+        "towards",
+        "twelve",
+        "twenty",
+        "two",
+        "un",
+        "under",
+        "until",
+        "up",
+        "upon",
+        "us",
+        "use",
+        "very",
+        "via",
+        "want",
+        "was",
+        "we",
+        "well",
+        "were",
+        "what",
+        "whatever",
+        "when",
+        "whence",
+        "whenever",
+        "where",
+        "whereafter",
+        "whereas",
+        "whereby",
+        "wherein",
+        "whereupon",
+        "wherever",
+        "whether",
+        "which",
+        "while",
+        "whither",
+        "who",
+        "whoever",
+        "whole",
+        "whom",
+        "whose",
+        "why",
+        "will",
+        "with",
+        "within",
+        "without",
+        "would",
+        "yet",
+        "you",
+        "your",
+        "yours",
+        "yourself",
+        "yourselves",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat",
+        "sun",
+        "1",
+        "10",
+        "2012",
+        "sa",
+        "says",
+        "pm",
+        "2013",
+        "na",
+        "ng",
+        "ang",
+        "year",
+        "years",
+        "percent",
+        "ko",
+        "ako",
+        "yung",
+        "yun",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "0",
+        "time",
+        "january",
+        "february",
+        "march",
+        "april",
+        "may",
+        "june",
+        "july",
+        "august",
+        "september",
+        "october",
+        "november",
+        "december",
+    ]
+)
 _SUPPORTED_LANGUAGES = {"ar", "de", "en", "es", "fr", "it", "ru", "sv", "zh"}
 _STOP_WORDS_CACHE = {"en": stopWords}
 # Sentence length (in words) that scores highest in the length feature.
@@ -90,13 +425,45 @@ _SENTENCE_PUNCTUATION = ".!?。！？؟।"
 _CLOSING_PUNCTUATION = "\"'”’»)]}"
 _NO_SPACE_SENTENCE_PUNCTUATION = "!?。！？؟।"
 _TITLE_ABBREVIATIONS = {
-    "dr", "mr", "mrs", "ms", "prof", "rev", "sr", "jr", "st",
+    "dr",
+    "mr",
+    "mrs",
+    "ms",
+    "prof",
+    "rev",
+    "sr",
+    "jr",
+    "st",
 }
 _NONTERMINAL_ABBREVIATIONS = {"e.g", "i.e", "n.b"}
 _CONTEXTUAL_ABBREVIATIONS = {
-    "a.m", "p.m", "u.s", "u.k", "u.n", "etc", "vs", "inc", "ltd",
-    "corp", "co", "approx", "fig", "no", "vol", "jan", "feb", "mar",
-    "apr", "jun", "jul", "aug", "sep", "sept", "oct", "nov", "dec",
+    "a.m",
+    "p.m",
+    "u.s",
+    "u.k",
+    "u.n",
+    "etc",
+    "vs",
+    "inc",
+    "ltd",
+    "corp",
+    "co",
+    "approx",
+    "fig",
+    "no",
+    "vol",
+    "jan",
+    "feb",
+    "mar",
+    "apr",
+    "jun",
+    "jul",
+    "aug",
+    "sep",
+    "sept",
+    "oct",
+    "nov",
+    "dec",
 }
 
 
@@ -111,8 +478,10 @@ class ScoringWeights:
 
     def __post_init__(self) -> None:
         values = (self.title, self.frequency, self.length, self.position)
-        if any(isinstance(value, bool) or not isinstance(value, (int, float))
-               for value in values):
+        if any(
+            isinstance(value, bool) or not isinstance(value, (int, float))
+            for value in values
+        ):
             raise TypeError("scoring weights must be numeric")
         if any(not isfinite(value) or value < 0 for value in values):
             raise ValueError("scoring weights must be finite and non-negative")
@@ -141,7 +510,9 @@ class ArticleExtractionError(PyTeaserError):
     """Raised when a fetched page does not yield an article."""
 
 
-def _fetch_article(url: str | bytes, language: str | None = None) -> tuple[str, str, str]:
+def _fetch_article(
+    url: str | bytes, language: str | None = None
+) -> tuple[str, str, str]:
     """Fetch a URL and return its ``(title, text, language)`` triple."""
     url = _coerce_text(url, "url")
     if not url.strip():
@@ -154,14 +525,17 @@ def _fetch_article(url: str | bytes, language: str | None = None) -> tuple[str, 
         article = grab_link(url)
     except FetchError as error:
         raise ArticleFetchError(
-            "Could not fetch the article URL: %s" % error) from error
+            "Could not fetch the article URL: %s" % error
+        ) from error
     except (LxmlError, OSError, TypeError, ValueError) as error:
         raise ArticleExtractionError(
-            "Could not extract an article from the URL: %s" % error) from error
+            "Could not extract an article from the URL: %s" % error
+        ) from error
 
     if not (article and article.cleaned_text and article.title):
         raise ArticleExtractionError(
-            "The page did not contain both an article title and body text")
+            "The page did not contain both an article title and body text"
+        )
 
     if language is None:
         try:
@@ -171,14 +545,16 @@ def _fetch_article(url: str | bytes, language: str | None = None) -> tuple[str, 
     return str(article.title), str(article.cleaned_text), language
 
 
-def SummarizeUrl(url: str | bytes, sentence_count: int = 5,
-                 language: str | None = None, max_words: int | None = None,
-                 weights: ScoringWeights | dict[str, float] | None = None,
-                 ) -> list[str]:
+def SummarizeUrl(
+    url: str | bytes,
+    sentence_count: int = 5,
+    language: str | None = None,
+    max_words: int | None = None,
+    weights: ScoringWeights | dict[str, float] | None = None,
+) -> list[str]:
     sentence_count = _validate_sentence_count(sentence_count)
     max_words = _validate_max_words(max_words)
-    requested_language = (
-        _normalize_language(language) if language is not None else None)
+    requested_language = _normalize_language(language) if language is not None else None
     if sentence_count == 0 or max_words == 0:
         return []
 
@@ -193,11 +569,14 @@ def SummarizeUrl(url: str | bytes, sentence_count: int = 5,
     )
 
 
-def Summarize(title: str | bytes | None, text: str | bytes,
-              sentence_count: int = 5, language: str = "en",
-              max_words: int | None = None,
-              weights: ScoringWeights | dict[str, float] | None = None,
-              ) -> list[str]:
+def Summarize(
+    title: str | bytes | None,
+    text: str | bytes,
+    sentence_count: int = 5,
+    language: str = "en",
+    max_words: int | None = None,
+    weights: ScoringWeights | dict[str, float] | None = None,
+) -> list[str]:
     """Return an extractive summary for a title and article text.
 
     Text arguments may be strings or UTF-8 encoded bytes. A missing title is
@@ -207,15 +586,19 @@ def Summarize(title: str | bytes | None, text: str | bytes,
     return [
         result.sentence
         for result in summarize_detailed(
-            title, text, sentence_count, language, max_words, weights)
+            title, text, sentence_count, language, max_words, weights
+        )
     ]
 
 
-def summarize_detailed(title: str | bytes | None, text: str | bytes,
-                       sentence_count: int = 5, language: str = "en",
-                       max_words: int | None = None,
-                       weights: ScoringWeights | dict[str, float] | None = None,
-                       ) -> list[ScoredSentence]:
+def summarize_detailed(
+    title: str | bytes | None,
+    text: str | bytes,
+    sentence_count: int = 5,
+    language: str = "en",
+    max_words: int | None = None,
+    weights: ScoringWeights | dict[str, float] | None = None,
+) -> list[ScoredSentence]:
     """Return selected sentences with their source indices and scores."""
     sentence_count = _validate_sentence_count(sentence_count)
     max_words = _validate_max_words(max_words)
@@ -238,8 +621,8 @@ def summarize_detailed(title: str | bytes | None, text: str | bytes,
     # the article's original order for a coherent extractive summary.
     ranked = sorted(
         score(
-            sentences, titleWords, keys, language, active_stop_words,
-            weights=weights),
+            sentences, titleWords, keys, language, active_stop_words, weights=weights
+        ),
         key=lambda result: (-result[2], result[0]),
     )
     selected = _select_non_redundant(
@@ -250,8 +633,9 @@ def summarize_detailed(title: str | bytes | None, text: str | bytes,
         max_words=max_words,
     )
     selected.sort(key=lambda result: result[0])
-    return [ScoredSentence(index, sentence, score)
-            for index, sentence, score in selected]
+    return [
+        ScoredSentence(index, sentence, score) for index, sentence, score in selected
+    ]
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -261,19 +645,25 @@ def main(argv: Sequence[str] | None = None) -> int:
         prog="pyteaser",
     )
     parser.add_argument(
-        "--version", action="version", version="pyteaser " + __version__)
+        "--version", action="version", version="pyteaser " + __version__
+    )
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--url", help="article URL to fetch and summarize")
     source.add_argument("--text", help="article text to summarize")
     source.add_argument(
-        "--input-file", type=Path, help="UTF-8 text file containing the article")
+        "--input-file", type=Path, help="UTF-8 text file containing the article"
+    )
     parser.add_argument("--title", default=None, help="article title for text input")
     parser.add_argument("--sentence-count", type=int, default=5)
     parser.add_argument("--max-words", type=int, default=None)
-    parser.add_argument("--language", default=None, help="language code such as en or es")
     parser.add_argument(
-        "--json", action="store_true",
-        help="print selected sentences with indices and scores as JSON")
+        "--language", default=None, help="language code such as en or es"
+    )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="print selected sentences with indices and scores as JSON",
+    )
     args = parser.parse_args(argv)
 
     if args.url and args.title is not None:
@@ -282,11 +672,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         if args.url:
             requested_language = (
-                _normalize_language(args.language) if args.language else None)
+                _normalize_language(args.language) if args.language else None
+            )
             title, text, language = _fetch_article(args.url, requested_language)
         else:
-            text = args.text if args.text is not None else args.input_file.read_text(
-                encoding="utf-8")
+            text = (
+                args.text
+                if args.text is not None
+                else args.input_file.read_text(encoding="utf-8")
+            )
             title = args.title
             language = args.language or "en"
 
@@ -298,16 +692,20 @@ def main(argv: Sequence[str] | None = None) -> int:
                 language=language,
                 max_words=args.max_words,
             )
-            print(json.dumps(
-                [
-                    {"index": result.index,
-                     "sentence": result.sentence,
-                     "score": result.score}
-                    for result in results
-                ],
-                ensure_ascii=False,
-                indent=2,
-            ))
+            print(
+                json.dumps(
+                    [
+                        {
+                            "index": result.index,
+                            "sentence": result.sentence,
+                            "score": result.score,
+                        }
+                        for result in results
+                    ],
+                    ensure_ascii=False,
+                    indent=2,
+                )
+            )
         else:
             summary = summarize(
                 title,
@@ -324,19 +722,25 @@ def main(argv: Sequence[str] | None = None) -> int:
     return 0
 
 
-def summarize(title: str | bytes | None, text: str | bytes,
-              sentence_count: int = 5, language: str = "en",
-              max_words: int | None = None,
-              weights: ScoringWeights | dict[str, float] | None = None,
-              ) -> list[str]:
+def summarize(
+    title: str | bytes | None,
+    text: str | bytes,
+    sentence_count: int = 5,
+    language: str = "en",
+    max_words: int | None = None,
+    weights: ScoringWeights | dict[str, float] | None = None,
+) -> list[str]:
     """PEP 8 spelling of :func:`Summarize`."""
     return Summarize(title, text, sentence_count, language, max_words, weights)
 
 
-def summarize_url(url: str | bytes, sentence_count: int = 5,
-                  language: str | None = None, max_words: int | None = None,
-                  weights: ScoringWeights | dict[str, float] | None = None,
-                  ) -> list[str]:
+def summarize_url(
+    url: str | bytes,
+    sentence_count: int = 5,
+    language: str | None = None,
+    max_words: int | None = None,
+    weights: ScoringWeights | dict[str, float] | None = None,
+) -> list[str]:
     """PEP 8 spelling of :func:`SummarizeUrl`."""
     return SummarizeUrl(url, sentence_count, language, max_words, weights)
 
@@ -369,7 +773,8 @@ def _load_stop_words(language):
     if language not in _STOP_WORDS_CACHE:
         try:
             resource = resources.files("goose.resources.text").joinpath(
-                "stopwords-%s.txt" % language)
+                "stopwords-%s.txt" % language
+            )
             content = resource.read_text(encoding="utf-8")
         except (OSError, UnicodeError, ModuleNotFoundError) as error:
             raise ValueError(
@@ -408,15 +813,22 @@ def _coerce_scoring_weights(weights):
         try:
             return ScoringWeights(**weights)
         except TypeError as error:
-            raise TypeError("weights must define title, frequency, length, and position") from error
+            raise TypeError(
+                "weights must define title, frequency, length, and position"
+            ) from error
     if not isinstance(weights, ScoringWeights):
         raise TypeError("weights must be a ScoringWeights instance or a dict")
     return weights
 
 
 def _select_non_redundant(
-        ranked, sentence_count, threshold=0.8, language="en", stop_words=None,
-        max_words=None):
+    ranked,
+    sentence_count,
+    threshold=0.8,
+    language="en",
+    stop_words=None,
+    max_words=None,
+):
     """Select high-ranked sentences while avoiding excessive word overlap."""
     if stop_words is None:
         stop_words = _load_stop_words(language)
@@ -437,10 +849,10 @@ def _select_non_redundant(
         if content_terms:
             terms = content_terms
 
-        if (len(terms) >= 3 and any(
-                len(existing) >= 3
-                and _jaccard_similarity(terms, existing) >= threshold
-                for existing in selected_terms)):
+        if len(terms) >= 3 and any(
+            len(existing) >= 3 and _jaccard_similarity(terms, existing) >= threshold
+            for existing in selected_terms
+        ):
             continue
 
         selected.append(candidate)
@@ -460,26 +872,29 @@ def _jaccard_similarity(left, right):
 
 
 def grab_link(inurl):
-    #extract article information using Python Goose
+    # extract article information using Python Goose
     from goose import Goose
+
     return Goose().extract(url=inurl)
 
 
-def score(sentences, titleWords, keywords, language="en", stop_words=None,
-          weights=None):
+def score(
+    sentences, titleWords, keywords, language="en", stop_words=None, weights=None
+):
     """Return ``(index, sentence, score)`` for every sentence occurrence."""
     if stop_words is None:
         stop_words = _load_stop_words(language)
     weights = _coerce_scoring_weights(weights)
     senSize = len(sentences)
-    totalWeight = sum((
-        weights.title, weights.frequency, weights.length, weights.position))
+    totalWeight = sum(
+        (weights.title, weights.frequency, weights.length, weights.position)
+    )
     ranks = []
     for i, s in enumerate(sentences):
         sentence = split_words(s, language)
         titleFeature = title_score(titleWords, sentence, stop_words)
         sentenceLength = length_score(sentence)
-        sentencePosition = sentence_position(i+1, senSize)
+        sentencePosition = sentence_position(i + 1, senSize)
         sbsFeature = sbs(sentence, keywords)
         dbsFeature = dbs(sentence, keywords)
         frequency = (sbsFeature + dbsFeature) / 2.0 * 10.0
@@ -502,7 +917,7 @@ def sbs(words, keywords):
     for word in words:
         if word in keywords:
             score += keywords[word]
-    return (1.0 / abs(len(words)) * score)/10.0
+    return (1.0 / abs(len(words)) * score) / 10.0
 
 
 def dbs(words, keywords):
@@ -518,7 +933,7 @@ def dbs(words, keywords):
             score = keywords[word]
             if previous is not None:
                 distance = i - previous[0]
-                total += (score * previous[1]) / (distance ** 2)
+                total += (score * previous[1]) / (distance**2)
             previous = (i, score)
 
     # number of intersections
@@ -543,7 +958,7 @@ def split_words(text, language="en"):
             )
             if token
         ]
-    text = regex_sub(r'[^\w ]', '', text, flags=REGEX_UNICODE)  # strip special chars
+    text = regex_sub(r"[^\w ]", "", text, flags=REGEX_UNICODE)  # strip special chars
     return [word.casefold() for word in text.split()]
 
 
@@ -563,7 +978,7 @@ def keywords(text, language="en", stop_words=None):
     top_keywords = dict(freq.most_common(minSize))
 
     for k in top_keywords:
-        articleScore = top_keywords[k]*1.0 / numWords
+        articleScore = top_keywords[k] * 1.0 / numWords
         top_keywords[k] = articleScore * 1.5 + 1
 
     return top_keywords
@@ -590,26 +1005,26 @@ def split_sentences(text):
                 continue
 
             punctuation_start = index
-            while (index < len(paragraph)
-                   and paragraph[index] in _SENTENCE_PUNCTUATION):
+            while index < len(paragraph) and paragraph[index] in _SENTENCE_PUNCTUATION:
                 index += 1
             punctuation_end = index
-            while (index < len(paragraph)
-                   and paragraph[index] in _CLOSING_PUNCTUATION):
+            while index < len(paragraph) and paragraph[index] in _CLOSING_PUNCTUATION:
                 index += 1
 
             punctuation = paragraph[punctuation_start:punctuation_end]
             at_end = index == len(paragraph)
             has_whitespace = not at_end and paragraph[index].isspace()
             no_space_boundary = any(
-                mark in punctuation for mark in _NO_SPACE_SENTENCE_PUNCTUATION)
+                mark in punctuation for mark in _NO_SPACE_SENTENCE_PUNCTUATION
+            )
             if not (at_end or has_whitespace or no_space_boundary):
                 continue
 
-            if ("." in punctuation
-                    and not no_space_boundary
-                    and not _should_split_after_period(
-                        paragraph, punctuation_start, index)):
+            if (
+                "." in punctuation
+                and not no_space_boundary
+                and not _should_split_after_period(paragraph, punctuation_start, index)
+            ):
                 continue
 
             sentence = paragraph[start:index].strip()
@@ -640,17 +1055,14 @@ def _should_split_after_period(text, punctuation_start, boundary_end):
     if abbreviation in _TITLE_ABBREVIATIONS | _NONTERMINAL_ABBREVIATIONS:
         return False
 
-    next_word = regex_search(
-        r"\w+", text[boundary_end:], flags=REGEX_UNICODE)
+    next_word = regex_search(r"\w+", text[boundary_end:], flags=REGEX_UNICODE)
     next_initial = next_word.group(0)[0] if next_word else ""
     if abbreviation in _CONTEXTUAL_ABBREVIATIONS:
         return not next_initial or next_initial.isupper()
 
-    if (len(abbreviation) == 1 and abbreviation.isalpha()
-            and next_initial.isupper()):
+    if len(abbreviation) == 1 and abbreviation.isalpha() and next_initial.isupper():
         return False
     return True
-
 
 
 def length_score(sentence):

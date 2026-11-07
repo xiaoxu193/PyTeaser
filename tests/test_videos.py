@@ -23,11 +23,10 @@ class TestVideoExtraction(TestCase):
         self.assertEqual(len(article.movies), 1)
         self.assertEqual(article.movies[0].provider, "html5")
         self.assertEqual(
-            article.movies[0].src, "https://news.example/world/media/report.mp4")
+            article.movies[0].src, "https://news.example/world/media/report.mp4"
+        )
         self.assertIn("<video", article.movies[0].embed_code)
 
 
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest_main()

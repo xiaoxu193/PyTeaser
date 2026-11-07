@@ -19,6 +19,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+
 import re
 import json
 from copy import deepcopy
@@ -35,15 +36,16 @@ PIPE_SPLITTER = StringSplitter("\\|")
 DASH_SPLITTER = StringSplitter(" - ")
 ARROWS_SPLITTER = StringSplitter("»")
 COLON_SPLITTER = StringSplitter(":")
-SPACE_SPLITTER = StringSplitter(' ')
+SPACE_SPLITTER = StringSplitter(" ")
 NO_STRINGS = set()
 A_REL_TAG_SELECTOR = "a[rel=tag]"
-A_HREF_TAG_SELECTOR = "a[href*='/tag/'], a[href*='/tags/'], a[href*='/topic/'], a[href*='?keyword=']"
-RE_LANG = r'^[A-Za-z]{2}$'
+A_HREF_TAG_SELECTOR = (
+    "a[href*='/tag/'], a[href*='/tags/'], a[href*='/topic/'], a[href*='?keyword=']"
+)
+RE_LANG = r"^[A-Za-z]{2}$"
 
 
 class ContentExtractor:
-
     def __init__(self, config):
         self.config = config
         # parser
@@ -64,7 +66,8 @@ class ContentExtractor:
 
     def get_word_stats(self, content):
         analyzer_class = stopwords_class_for_language(
-            self.language, self.stopwords_class)
+            self.language, self.stopwords_class
+        )
         return analyzer_class(language=self.language).get_stopword_count(content)
 
     def get_title(self, article):
@@ -72,18 +75,17 @@ class ContentExtractor:
         Fetch the article title and analyze it
         """
 
-        title = ''
+        title = ""
         doc = article.doc
 
-        title_element = self.parser.getElementsByTag(doc, tag='title')
-        title_text = (
-            self.parser.getText(title_element[0])
-            if title_element else "")
+        title_element = self.parser.getElementsByTag(doc, tag="title")
+        title_text = self.parser.getText(title_element[0]) if title_element else ""
         if not title_text:
             for selector in (
-                    "meta[property='og:title']",
-                    "meta[name='twitter:title']",
-                    "meta[itemprop='headline']"):
+                "meta[property='og:title']",
+                "meta[name='twitter:title']",
+                "meta[itemprop='headline']",
+            ):
                 title_text = self.get_meta_content(doc, selector)
                 if title_text:
                     break
@@ -95,22 +97,22 @@ class ContentExtractor:
         used_delimeter = False
 
         # split title with |
-        if '|' in title_text:
+        if "|" in title_text:
             title_text = self.split_title(title_text, PIPE_SPLITTER)
             used_delimeter = True
 
         # split title with -
-        if not used_delimeter and '-' in title_text:
+        if not used_delimeter and "-" in title_text:
             title_text = self.split_title(title_text, DASH_SPLITTER)
             used_delimeter = True
 
         # split title with »
-        if not used_delimeter and '»' in title_text:
+        if not used_delimeter and "»" in title_text:
             title_text = self.split_title(title_text, ARROWS_SPLITTER)
             used_delimeter = True
 
         # split title with :
-        if not used_delimeter and ':' in title_text:
+        if not used_delimeter and ":" in title_text:
             title_text = self.split_title(title_text, COLON_SPLITTER)
             used_delimeter = True
 
@@ -118,8 +120,7 @@ class ContentExtractor:
         return title
 
     def get_jsonld_headline(self, document):
-        scripts = self.parser.css_select(
-            document, "script[type='application/ld+json']")
+        scripts = self.parser.css_select(document, "script[type='application/ld+json']")
         for script in scripts:
             try:
                 structured_data = json.loads("".join(script.itertext()))
@@ -172,29 +173,29 @@ class ContentExtractor:
         <link rel="shortcut icon" type="image/png" href="favicon.png" />
         <link rel="icon" type="image/png" href="favicon.png" />
         """
-        kwargs = {'tag': 'link', 'attr': 'rel', 'value': 'icon'}
+        kwargs = {"tag": "link", "attr": "rel", "value": "icon"}
         meta = self.parser.getElementsByTag(article.doc, **kwargs)
         if meta:
-            favicon = self.parser.getAttribute(meta[0], 'href')
+            favicon = self.parser.getAttribute(meta[0], "href")
             return favicon
-        return ''
+        return ""
 
     def get_meta_lang(self, article):
         """\
         Extract content language from meta
         """
         # we have a lang attribute in html
-        attr = self.parser.getAttribute(article.doc, attr='lang')
+        attr = self.parser.getAttribute(article.doc, attr="lang")
         if attr is None:
             # look up for a Content-Language in meta
             items = [
-                {'tag': 'meta', 'attr': 'http-equiv', 'value': 'content-language'},
-                {'tag': 'meta', 'attr': 'name', 'value': 'lang'}
+                {"tag": "meta", "attr": "http-equiv", "value": "content-language"},
+                {"tag": "meta", "attr": "name", "value": "lang"},
             ]
             for item in items:
                 meta = self.parser.getElementsByTag(article.doc, **item)
                 if meta:
-                    attr = self.parser.getAttribute(meta[0], attr='content')
+                    attr = self.parser.getAttribute(meta[0], attr="content")
                     break
 
         if attr:
@@ -212,12 +213,12 @@ class ContentExtractor:
         content = None
 
         if meta is not None and len(meta) > 0:
-            content = self.parser.getAttribute(meta[0], 'content')
+            content = self.parser.getAttribute(meta[0], "content")
 
         if content:
             return content.strip()
 
-        return ''
+        return ""
 
     def get_meta_description(self, article):
         """\
@@ -233,8 +234,7 @@ class ContentExtractor:
 
     def get_publish_date(self, article):
         """Extract a publication date from common metadata or JSON-LD."""
-        document = (
-            article.raw_doc if article.raw_doc is not None else article.doc)
+        document = article.raw_doc if article.raw_doc is not None else article.doc
         date_selectors = (
             ("meta[property='article:published_time']", "content"),
             ("meta[property='og:published_time']", "content"),
@@ -251,8 +251,7 @@ class ContentExtractor:
                 if value and value.strip():
                     return value.strip()
 
-        scripts = self.parser.css_select(
-            document, "script[type='application/ld+json']")
+        scripts = self.parser.css_select(document, "script[type='application/ld+json']")
         for script in scripts:
             try:
                 structured_data = json.loads("".join(script.itertext()))
@@ -285,16 +284,16 @@ class ContentExtractor:
         if the article has meta canonical link set in the url
         """
         if article.final_url:
-            kwargs = {'tag': 'link', 'attr': 'rel', 'value': 'canonical'}
+            kwargs = {"tag": "link", "attr": "rel", "value": "canonical"}
             meta = self.parser.getElementsByTag(article.doc, **kwargs)
             if meta is not None and len(meta) > 0:
-                href = self.parser.getAttribute(meta[0], 'href')
+                href = self.parser.getAttribute(meta[0], "href")
                 if href:
                     href = href.strip()
                     o = urlparse(href)
                     if not o.hostname:
                         z = urlparse(article.final_url)
-                        domain = '%s://%s' % (z.scheme, z.hostname)
+                        domain = "%s://%s" % (z.scheme, z.hostname)
                         href = urljoin(domain, href)
                     return href
         return article.final_url
@@ -352,7 +351,7 @@ class ContentExtractor:
         for node in nodes_with_text:
             boost_score = float(0)
             # boost
-            if(self.is_boostable(node)):
+            if self.is_boostable(node):
                 if cnt >= 0:
                     boost_score = float((1.0 / starting_boost) * 50)
                     starting_boost += 1
@@ -450,14 +449,16 @@ class ContentExtractor:
         """\
         adds any siblings that may have a decent score to this node
         """
-        if current_sibling.tag == 'p' and len(self.parser.getText(current_sibling)) > 0:
+        if current_sibling.tag == "p" and len(self.parser.getText(current_sibling)) > 0:
             e0 = current_sibling
             if e0.tail:
                 e0 = deepcopy(e0)
-                e0.tail = ''
+                e0.tail = ""
             return [e0]
         else:
-            potential_paragraphs = self.parser.getElementsByTag(current_sibling, tag='p')
+            potential_paragraphs = self.parser.getElementsByTag(
+                current_sibling, tag="p"
+            )
             if potential_paragraphs is None:
                 return None
             else:
@@ -467,11 +468,13 @@ class ContentExtractor:
                     if len(text) > 0:
                         word_stats = self.get_word_stats(text)
                         paragraph_score = word_stats.get_stopword_count()
-                        sibling_baseline_score = float(.30)
+                        sibling_baseline_score = float(0.30)
                         high_link_density = self.is_highlink_density(first_paragraph)
-                        score = float(baselinescore_siblings_para * sibling_baseline_score)
+                        score = float(
+                            baselinescore_siblings_para * sibling_baseline_score
+                        )
                         if score < paragraph_score and not high_link_density:
-                            p = self.parser.createElement(tag='p', text=text, tail=None)
+                            p = self.parser.createElement(tag="p", text=text, tail=None)
                             ps.append(p)
                 return ps
 
@@ -488,7 +491,7 @@ class ContentExtractor:
         base = 100000
         paragraphs_number = 0
         paragraphs_score = 0
-        nodes_to_check = self.parser.getElementsByTag(top_node, tag='p')
+        nodes_to_check = self.parser.getElementsByTag(top_node, tag="p")
 
         for node in nodes_to_check:
             text_node = self.parser.getText(node)
@@ -510,7 +513,7 @@ class ContentExtractor:
         we're passing in to the current
         """
         current_score = 0
-        score_string = self.parser.getAttribute(node, 'gravityScore')
+        score_string = self.parser.getAttribute(node, "gravityScore")
         if score_string:
             current_score = int(score_string)
 
@@ -522,7 +525,7 @@ class ContentExtractor:
         stores how many decent nodes are under a parent node
         """
         current_score = 0
-        count_string = self.parser.getAttribute(node, 'gravityNodes')
+        count_string = self.parser.getAttribute(node, "gravityNodes")
         if count_string:
             current_score = int(count_string)
 
@@ -535,19 +538,19 @@ class ContentExtractor:
         is there not much text and most of it contains linky shit?
         if so it's no good
         """
-        links = self.parser.getElementsByTag(e, tag='a')
+        links = self.parser.getElementsByTag(e, tag="a")
         if links is None or len(links) == 0:
             return False
 
         text = self.parser.getText(e)
-        words = text.split(' ')
+        words = text.split(" ")
         words_number = float(len(words))
         sb = []
         for link in links:
             sb.append(self.parser.getText(link))
 
-        linkText = ''.join(sb)
-        linkWords = linkText.split(' ')
+        linkText = "".join(sb)
+        linkWords = linkText.split(" ")
         numberOfLinkWords = float(len(linkWords))
         numberOfLinks = float(len(links))
         linkDivisor = float(numberOfLinkWords / words_number)
@@ -564,7 +567,7 @@ class ContentExtractor:
         return self.get_node_gravity_score(node) or 0
 
     def get_node_gravity_score(self, node):
-        grvScoreString = self.parser.getAttribute(node, 'gravityScore')
+        grvScoreString = self.parser.getAttribute(node, "gravityScore")
         if not grvScoreString:
             return None
         return int(grvScoreString)
@@ -575,19 +578,19 @@ class ContentExtractor:
         on like paragraphs and tables
         """
         nodes_to_check = []
-        for tag in ['p', 'pre', 'td']:
+        for tag in ["p", "pre", "td"]:
             items = self.parser.getElementsByTag(doc, tag=tag)
             nodes_to_check += items
         return nodes_to_check
 
     def is_table_and_no_para_exist(self, e):
-        subParagraphs = self.parser.getElementsByTag(e, tag='p')
+        subParagraphs = self.parser.getElementsByTag(e, tag="p")
         for p in subParagraphs:
             txt = self.parser.getText(p)
             if len(txt) < 25:
                 self.parser.remove(p)
 
-        subParagraphs2 = self.parser.getElementsByTag(e, tag='p')
+        subParagraphs2 = self.parser.getElementsByTag(e, tag="p")
         if len(subParagraphs2) == 0 and e.tag != "td":
             return True
         return False
@@ -595,9 +598,9 @@ class ContentExtractor:
     def is_nodescore_threshold_met(self, node, e):
         top_node_score = self.get_score(node)
         current_nodeScore = self.get_score(e)
-        thresholdScore = float(top_node_score * .08)
+        thresholdScore = float(top_node_score * 0.08)
 
-        if (current_nodeScore < thresholdScore) and e.tag != 'td':
+        if (current_nodeScore < thresholdScore) and e.tag != "td":
             return False
         return True
 
@@ -609,10 +612,12 @@ class ContentExtractor:
         node = self.add_siblings(targetNode)
         for e in self.parser.getChildren(node):
             e_tag = self.parser.getTag(e)
-            if e_tag != 'p':
-                if self.is_highlink_density(e) \
-                    or self.is_table_and_no_para_exist(e) \
-                    or not self.is_nodescore_threshold_met(node, e):
+            if e_tag != "p":
+                if (
+                    self.is_highlink_density(e)
+                    or self.is_table_and_no_para_exist(e)
+                    or not self.is_nodescore_threshold_met(node, e)
+                ):
                     self.parser.remove(e)
         return node
 

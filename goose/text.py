@@ -22,28 +22,30 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+
 import os
 import re
 import string
 from goose.utils import FileHelper
 from goose.utils.encoding import smart_unicode
-TABSSPACE = re.compile(r'[\s\t]+')
+
+TABSSPACE = re.compile(r"[\s\t]+")
+
 
 def innerTrim(value):
     if isinstance(value, str):
         # remove tab and white space
-        value = re.sub(TABSSPACE, ' ', value)
-        value = ''.join(value.splitlines())
+        value = re.sub(TABSSPACE, " ", value)
+        value = "".join(value.splitlines())
         return value.strip()
-    return ''
+    return ""
 
 
 def encodeValue(value):
-    return smart_unicode(value, errors='replace')
+    return smart_unicode(value, errors="replace")
 
 
 class WordStats:
-
     def __init__(self):
         # total number of stopwords or
         # good words that we can calculate
@@ -76,26 +78,27 @@ class WordStats:
 
 
 class StopWords:
-
     PUNCTUATION = re.compile(r"[^\w\s]", re.UNICODE)
-    TRANS_TABLE = str.maketrans('', '', string.punctuation)
+    TRANS_TABLE = str.maketrans("", "", string.punctuation)
     _cached_stop_words = {}
 
-    def __init__(self, language='en'):
+    def __init__(self, language="en"):
         # TODO replace 'x' with class
         # to generate dynamic path for file to load
         if language not in self._cached_stop_words:
-            path = os.path.join('text', 'stopwords-%s.txt' % language)
-            self._cached_stop_words[language] = set(FileHelper.loadResourceFile(path).splitlines())
+            path = os.path.join("text", "stopwords-%s.txt" % language)
+            self._cached_stop_words[language] = set(
+                FileHelper.loadResourceFile(path).splitlines()
+            )
         self.STOP_WORDS = self._cached_stop_words[language]
 
     def remove_punctuation(self, content):
         if isinstance(content, bytes):
-            content = content.decode('utf-8', 'replace')
-        return self.PUNCTUATION.sub('', content)
+            content = content.decode("utf-8", "replace")
+        return self.PUNCTUATION.sub("", content)
 
     def candiate_words(self, stripped_input):
-        return stripped_input.split(' ')
+        return stripped_input.split(" ")
 
     def get_stopword_count(self, content):
         if not content:
@@ -120,9 +123,10 @@ class StopWordsChinese(StopWords):
     """
     Chinese segmentation
     """
-    def __init__(self, language='zh'):
+
+    def __init__(self, language="zh"):
         # force zh language code
-        super().__init__(language='zh')
+        super().__init__(language="zh")
 
     def candiate_words(self, stripped_input):
         # jieba build a tree that takes sometime
@@ -137,7 +141,7 @@ class StopWordsChinese(StopWords):
 
 def stopwords_class_for_language(language, configured_class):
     """Choose Chinese segmentation automatically for the default analyzer."""
-    if language == 'zh' and configured_class is StopWords:
+    if language == "zh" and configured_class is StopWords:
         return StopWordsChinese
     return configured_class
 
@@ -146,12 +150,14 @@ class StopWordsArabic(StopWords):
     """
     Arabic segmentation
     """
-    def __init__(self, language='ar'):
+
+    def __init__(self, language="ar"):
         # force ar language code
-        super().__init__(language='ar')
+        super().__init__(language="ar")
 
     def candiate_words(self, stripped_input):
         import nltk
+
         s = nltk.stem.isri.ISRIStemmer()
         words = []
         for word in nltk.tokenize.wordpunct_tokenize(stripped_input):

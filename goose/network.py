@@ -19,6 +19,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+
 import ipaddress
 import socket
 from http.cookiejar import CookieJar
@@ -54,7 +55,8 @@ def _resolve_addresses(host, port, allow_private_network=False):
     if not addresses:
         raise ValueError("URL hostname did not resolve to an address")
     if not allow_private_network and any(
-            not address.is_global for address in addresses):
+        not address.is_global for address in addresses
+    ):
         raise ValueError("Private and non-routable network addresses are blocked")
     return [str(address) for address in addresses]
 
@@ -86,18 +88,21 @@ def validate_url(url, allow_private_network=False):
         return parsed
 
     _resolve_addresses(
-        parsed.hostname.rstrip("."), port or expected_port, allow_private_network)
+        parsed.hostname.rstrip("."), port or expected_port, allow_private_network
+    )
     return parsed
 
 
-def _create_validated_socket(host, port, timeout, source_address,
-                             allow_private_network):
+def _create_validated_socket(
+    host, port, timeout, source_address, allow_private_network
+):
     addresses = _resolve_addresses(host, port, allow_private_network)
     last_error = None
     for address in addresses:
         try:
             return socket.create_connection(
-                (address, port), timeout=timeout, source_address=source_address)
+                (address, port), timeout=timeout, source_address=source_address
+            )
         except OSError as error:
             last_error = error
     raise last_error
@@ -110,8 +115,12 @@ class _SafeHTTPConnection(HTTPConnection):
 
     def connect(self):
         self.sock = _create_validated_socket(
-            self.host, self.port, self.timeout, self.source_address,
-            self.allow_private_network)
+            self.host,
+            self.port,
+            self.timeout,
+            self.source_address,
+            self.allow_private_network,
+        )
         if self._tunnel_host:
             self._tunnel()
 
@@ -123,13 +132,18 @@ class _SafeHTTPSConnection(HTTPSConnection):
 
     def connect(self):
         self.sock = _create_validated_socket(
-            self.host, self.port, self.timeout, self.source_address,
-            self.allow_private_network)
+            self.host,
+            self.port,
+            self.timeout,
+            self.source_address,
+            self.allow_private_network,
+        )
         if self._tunnel_host:
             self._tunnel()
         server_hostname = self._tunnel_host or self.host
         self.sock = self._context.wrap_socket(
-            self.sock, server_hostname=server_hostname)
+            self.sock, server_hostname=server_hostname
+        )
 
 
 class SafeHTTPHandler(HTTPHandler):
@@ -169,7 +183,8 @@ class SafeRedirectHandler(HTTPRedirectHandler):
     def redirect_request(self, request, response, code, message, headers, new_url):
         validate_url(new_url, self.allow_private_network)
         return super().redirect_request(
-            request, response, code, message, headers, new_url)
+            request, response, code, message, headers, new_url
+        )
 
 
 def _read_limited(response, max_bytes):
@@ -219,7 +234,6 @@ def fetch_bytes(config, url, max_bytes, accepted_content_types=None):
 
 
 class HtmlFetcher:
-
     def get_html(self, config, url):
         """\
         Fetch an HTML document or raise FetchError when the request fails.
