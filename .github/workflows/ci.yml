@@ -33,6 +33,8 @@ jobs:
         run: python benchmarks/evaluate.py
       - name: Lint Python sources
         run: ruff check .
+      - name: Check formatting
+        run: ruff format --check .
       - name: Check dependencies
         run: python -m pip check
 
