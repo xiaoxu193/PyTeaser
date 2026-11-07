@@ -1,6 +1,70 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyteaser"
+description = "Extractive summaries and article text extraction"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT AND Apache-2.0"
+license-files = ["LICENSE", "goose/LICENSE.txt", "NOTICE"]
+authors = [
+    { name = "Xiao Xu", email = "xx56@cornell.edu" },
+]
+keywords = [
+    "summarization",
+    "summarizer",
+    "extractive",
+    "text",
+    "nlp",
+    "news",
+    "article",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Text Processing :: Linguistic",
+]
+dependencies = [
+    "lxml>=5.0",
+    "cssselect>=1.2",
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+images = ["Pillow>=10"]
+chinese = ["jieba>=0.42.1"]
+soup = ["beautifulsoup4>=4.12"]
+all = ["Pillow>=10", "jieba>=0.42.1", "beautifulsoup4>=4.12"]
+dev = ["ruff>=0.16,<1"]
+
+[project.scripts]
+pyteaser = "pyteaser:main"
+
+[project.urls]
+Homepage = "https://github.com/xiaoxu193/PyTeaser"
+Issues = "https://github.com/xiaoxu193/PyTeaser/issues"
+Changelog = "https://github.com/xiaoxu193/PyTeaser/blob/main/CHANGELOG.md"
+
+[tool.setuptools]
+py-modules = ["pyteaser"]
+
+[tool.setuptools.packages.find]
+include = ["goose*"]
+
+[tool.setuptools.dynamic]
+version = { attr = "pyteaser.__version__" }
 
 [tool.ruff]
 target-version = "py310"
