@@ -11,14 +11,16 @@ Goose extractor.
 from __future__ import annotations
 
 import argparse
+import json
 from bisect import bisect_left
 from collections import Counter
 from dataclasses import dataclass
 from importlib import resources
-import json
 from math import isfinite
 from pathlib import Path
-from re import search as regex_search, sub as regex_sub, UNICODE as REGEX_UNICODE
+from re import UNICODE as REGEX_UNICODE
+from re import search as regex_search
+from re import sub as regex_sub
 from typing import Sequence
 
 __version__ = "2.0.0"
@@ -519,6 +521,7 @@ def _fetch_article(
         raise ValueError("url must not be empty")
 
     from lxml.etree import LxmlError
+
     from goose.network import FetchError
 
     try:

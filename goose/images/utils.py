@@ -26,10 +26,9 @@ import warnings
 from http.client import HTTPException
 from urllib.error import HTTPError, URLError
 
+from goose.images.image import ImageDetails, LocallyStoredImage
 from goose.network import fetch_bytes
 from goose.utils.encoding import smart_str
-from goose.images.image import ImageDetails
-from goose.images.image import LocallyStoredImage
 
 
 class ImageUtils:

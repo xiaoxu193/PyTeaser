@@ -26,6 +26,7 @@ limitations under the License.
 import os
 import re
 import string
+
 from goose.utils import FileHelper
 from goose.utils.encoding import smart_unicode
 

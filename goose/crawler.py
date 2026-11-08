@@ -21,17 +21,18 @@ limitations under the License.
 """
 
 import contextlib
-import os
 import glob
+import os
 from copy import deepcopy
+
 from goose.article import Article
-from goose.utils import URLHelper, RawHelper
-from goose.extractors import StandardContentExtractor
 from goose.cleaners import StandardDocumentCleaner
-from goose.outputformatters import StandardOutputFormatter
+from goose.extractors import StandardContentExtractor
 from goose.images.extractors import UpgradedImageIExtractor
-from goose.videos.extractors import VideoExtractor
 from goose.network import HtmlFetcher
+from goose.outputformatters import StandardOutputFormatter
+from goose.utils import RawHelper, URLHelper
+from goose.videos.extractors import VideoExtractor
 
 
 class CrawlCandidate:

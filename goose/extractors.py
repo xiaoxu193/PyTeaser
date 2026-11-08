@@ -20,14 +20,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import re
 import json
+import re
 from copy import deepcopy
-from urllib.parse import urlparse, urljoin
-from goose.utils import StringSplitter
-from goose.utils import StringReplacement
-from goose.utils import ReplaceSequence
+from urllib.parse import urljoin, urlparse
+
 from goose.text import stopwords_class_for_language
+from goose.utils import ReplaceSequence, StringReplacement, StringSplitter
 
 MOTLEY_REPLACEMENT = StringReplacement("&#65533;", "")
 ESCAPED_FRAGMENT_REPLACEMENT = StringReplacement("#!", "?_escaped_fragment_=")

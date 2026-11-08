@@ -1,7 +1,8 @@
 """Offline tests for the summarization API."""
 
 from types import ModuleType
-from unittest import TestCase, main as unittest_main
+from unittest import TestCase
+from unittest import main as unittest_main
 from unittest.mock import patch
 
 from pyteaser import (

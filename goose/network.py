@@ -22,8 +22,8 @@ limitations under the License.
 
 import ipaddress
 import socket
-from http.cookiejar import CookieJar
 from http.client import HTTPConnection, HTTPException, HTTPSConnection
+from http.cookiejar import CookieJar
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 from urllib.request import (

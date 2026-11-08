@@ -5,19 +5,21 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from io import BytesIO
 from threading import Thread
 from types import SimpleNamespace
-from unittest import TestCase, main as unittest_main
+from unittest import TestCase
+from unittest import main as unittest_main
 from unittest.mock import MagicMock, patch
 from urllib.request import Request
 
 from goose.configuration import Configuration
 from goose.network import (
+    FetchError,
+    HtmlFetcher,
     SafeRedirectHandler,
-    _SafeHTTPConnection,
     _read_limited,
+    _SafeHTTPConnection,
     fetch_bytes,
     validate_url,
 )
-from goose.network import FetchError, HtmlFetcher
 
 
 class TestNetworkPolicy(TestCase):

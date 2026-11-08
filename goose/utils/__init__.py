@@ -20,12 +20,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import time
 import hashlib
-import re
 import os
-import goose
+import re
+import time
 import urllib.parse as urlparse
+
+import goose
 
 
 class BuildURL:

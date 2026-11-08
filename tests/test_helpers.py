@@ -1,6 +1,7 @@
 """Offline tests for goose URL helpers."""
 
-from unittest import TestCase, main as unittest_main
+from unittest import TestCase
+from unittest import main as unittest_main
 
 from goose.utils import BuildURL
 

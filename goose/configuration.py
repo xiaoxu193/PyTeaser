@@ -22,9 +22,9 @@ limitations under the License.
 
 import os
 import tempfile
+
+from goose.parsers import Parser, ParserSoup
 from goose.text import StopWords
-from goose.parsers import Parser
-from goose.parsers import ParserSoup
 from goose.version import __version__
 
 

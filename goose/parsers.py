@@ -20,11 +20,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+from copy import deepcopy
+
 import lxml.html
 from lxml import etree
-from copy import deepcopy
-from goose.text import innerTrim
-from goose.text import encodeValue
+
+from goose.text import encodeValue, innerTrim
 
 
 class Parser:

@@ -20,12 +20,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import re
 import os
-from urllib.parse import urlparse, urljoin
-from goose.utils import FileHelper
+import re
+from urllib.parse import urljoin, urlparse
+
 from goose.images.image import Image
 from goose.images.utils import ImageUtils
+from goose.utils import FileHelper
 
 KNOWN_IMG_DOM_NAMES = [
     "yn-story-related-media",

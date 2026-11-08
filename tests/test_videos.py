@@ -1,6 +1,7 @@
 """Offline tests for goose video extraction."""
 
-from unittest import TestCase, main as unittest_main
+from unittest import TestCase
+from unittest import main as unittest_main
 
 from goose.article import Article
 from goose.configuration import Configuration

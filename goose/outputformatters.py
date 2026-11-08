@@ -21,6 +21,7 @@ limitations under the License.
 """
 
 from html import unescape
+
 from goose.text import innerTrim, stopwords_class_for_language
 
 

@@ -1,17 +1,15 @@
 """Run a small offline ROUGE-1 smoke benchmark for the extractive baseline."""
 
-from collections import Counter
 import json
-from pathlib import Path
 import re
 import sys
-
+from collections import Counter
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from pyteaser import summarize  # noqa: E402
-
 
 TOKEN_PATTERN = re.compile(r"\w+", re.UNICODE)
 DATASET = Path(__file__).with_name("articles.jsonl")

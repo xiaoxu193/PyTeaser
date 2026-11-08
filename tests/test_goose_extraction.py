@@ -1,7 +1,8 @@
 """Offline tests for Goose article extraction."""
 
 from types import SimpleNamespace
-from unittest import TestCase, main as unittest_main
+from unittest import TestCase
+from unittest import main as unittest_main
 from unittest.mock import patch
 
 from goose import Goose

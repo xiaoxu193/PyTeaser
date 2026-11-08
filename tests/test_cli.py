@@ -1,13 +1,14 @@
 """Offline tests for the pyteaser command-line interface."""
 
 import json
+import os
 import subprocess
 import sys
 import tempfile
-import os
 from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
-from unittest import TestCase, main as unittest_main
+from unittest import TestCase
+from unittest import main as unittest_main
 
 from pyteaser import main
 
