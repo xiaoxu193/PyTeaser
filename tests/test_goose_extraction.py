@@ -63,9 +63,11 @@ class TestGooseExtraction(TestCase):
             meta_lang="es",
         )
 
-        with patch("pyteaser.grab_link", return_value=article):
-            with patch("pyteaser.Summarize", return_value=["resumen"]) as summarize:
-                result = SummarizeUrl("https://example.test/articulo")
+        with (
+            patch("pyteaser.grab_link", return_value=article),
+            patch("pyteaser.Summarize", return_value=["resumen"]) as summarize,
+        ):
+            result = SummarizeUrl("https://example.test/articulo")
 
         self.assertEqual(result, ["resumen"])
         self.assertEqual(summarize.call_args.kwargs["language"], "es")
@@ -85,16 +87,20 @@ class TestGooseExtraction(TestCase):
         self.assertEqual(len(summaries), 1)
 
     def test_url_fetch_failure_raises_public_exception(self):
-        with patch("pyteaser.grab_link", side_effect=FetchError("blocked")):
-            with self.assertRaises(ArticleFetchError):
-                SummarizeUrl("https://example.test/article")
+        with (
+            patch("pyteaser.grab_link", side_effect=FetchError("blocked")),
+            self.assertRaises(ArticleFetchError),
+        ):
+            SummarizeUrl("https://example.test/article")
 
     def test_missing_article_content_raises_public_exception(self):
         article = SimpleNamespace(title="", cleaned_text="Some text", meta_lang="en")
 
-        with patch("pyteaser.grab_link", return_value=article):
-            with self.assertRaises(ArticleExtractionError):
-                SummarizeUrl("https://example.test/article")
+        with (
+            patch("pyteaser.grab_link", return_value=article),
+            self.assertRaises(ArticleExtractionError),
+        ):
+            SummarizeUrl("https://example.test/article")
 
     def test_private_image_url_is_skipped_without_failing_extraction(self):
         html = """<html><head><title>Image fetch test</title></head><body><article>

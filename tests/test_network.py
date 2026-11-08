@@ -97,9 +97,11 @@ class TestNetworkPolicy(TestCase):
         self.assertEqual(opener.open.call_args.kwargs["timeout"], 2.5)
 
     def test_html_fetcher_raises_typed_fetch_error(self):
-        with patch("goose.network.fetch_bytes", side_effect=ValueError("blocked")):
-            with self.assertRaises(FetchError):
-                HtmlFetcher().get_html(Configuration(), "https://example.test/")
+        with (
+            patch("goose.network.fetch_bytes", side_effect=ValueError("blocked")),
+            self.assertRaises(FetchError),
+        ):
+            HtmlFetcher().get_html(Configuration(), "https://example.test/")
 
     def test_fetches_from_loopback_when_explicitly_allowed(self):
         body = b"<html>local test</html>"

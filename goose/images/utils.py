@@ -20,6 +20,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+import contextlib
 import hashlib
 import os
 import warnings
@@ -133,10 +134,8 @@ class ImageUtils:
 
     @classmethod
     def _remove_localfile(cls, path):
-        try:
+        with contextlib.suppress(FileNotFoundError):
             os.remove(path)
-        except FileNotFoundError:
-            pass
 
     @classmethod
     def get_localfile_name(cls, link_hash, src, config):

@@ -331,8 +331,6 @@ class ContentExtractor:
         nodes_to_check = self.nodes_to_check(doc)
 
         starting_boost = 1.0
-        cnt = 0
-        i = 0
         parent_nodes = []
         nodes_with_text = []
 
@@ -347,21 +345,19 @@ class ContentExtractor:
         negative_scoring = 0
         bottom_negativescore_nodes = float(nodes_number) * 0.25
 
-        for node in nodes_with_text:
+        for cnt, node in enumerate(nodes_with_text):
             boost_score = float(0)
             # boost
-            if self.is_boostable(node):
-                if cnt >= 0:
-                    boost_score = float((1.0 / starting_boost) * 50)
-                    starting_boost += 1
+            if self.is_boostable(node) and cnt >= 0:
+                boost_score = float((1.0 / starting_boost) * 50)
+                starting_boost += 1
             # nodes_number
-            if nodes_number > 15:
-                if (nodes_number - i) <= bottom_negativescore_nodes:
-                    booster = float(bottom_negativescore_nodes - (nodes_number - i))
-                    boost_score = float(-pow(booster, float(2)))
-                    negscore = -abs(boost_score) + negative_scoring
-                    if negscore > 40:
-                        boost_score = float(5)
+            if nodes_number > 15 and (nodes_number - cnt) <= bottom_negativescore_nodes:
+                booster = float(bottom_negativescore_nodes - (nodes_number - cnt))
+                boost_score = float(-pow(booster, float(2)))
+                negscore = -abs(boost_score) + negative_scoring
+                if negscore > 40:
+                    boost_score = float(5)
 
             text_node = self.parser.getText(node)
             word_stats = self.get_word_stats(text_node)
@@ -382,8 +378,6 @@ class ContentExtractor:
                 self.update_score(parent_parent_node, upscore // 2)
                 if parent_parent_node not in parent_nodes:
                     parent_nodes.append(parent_parent_node)
-            cnt += 1
-            i += 1
 
         top_node_score = 0
         for e in parent_nodes:
@@ -554,10 +548,7 @@ class ContentExtractor:
         numberOfLinks = float(len(links))
         linkDivisor = float(numberOfLinkWords / words_number)
         score = float(linkDivisor * numberOfLinks)
-        if score >= 1.0:
-            return True
-        return False
-        # return True if score > 1.0 else False
+        return score >= 1.0
 
     def get_score(self, node):
         """\
@@ -590,18 +581,14 @@ class ContentExtractor:
                 self.parser.remove(p)
 
         subParagraphs2 = self.parser.getElementsByTag(e, tag="p")
-        if len(subParagraphs2) == 0 and e.tag != "td":
-            return True
-        return False
+        return len(subParagraphs2) == 0 and e.tag != "td"
 
     def is_nodescore_threshold_met(self, node, e):
         top_node_score = self.get_score(node)
         current_nodeScore = self.get_score(e)
         thresholdScore = float(top_node_score * 0.08)
 
-        if (current_nodeScore < thresholdScore) and e.tag != "td":
-            return False
-        return True
+        return current_nodeScore >= thresholdScore or e.tag == "td"
 
     def post_cleanup(self, targetNode):
         """\
@@ -611,13 +598,12 @@ class ContentExtractor:
         node = self.add_siblings(targetNode)
         for e in self.parser.getChildren(node):
             e_tag = self.parser.getTag(e)
-            if e_tag != "p":
-                if (
-                    self.is_highlink_density(e)
-                    or self.is_table_and_no_para_exist(e)
-                    or not self.is_nodescore_threshold_met(node, e)
-                ):
-                    self.parser.remove(e)
+            if e_tag != "p" and (
+                self.is_highlink_density(e)
+                or self.is_table_and_no_para_exist(e)
+                or not self.is_nodescore_threshold_met(node, e)
+            ):
+                self.parser.remove(e)
         return node
 
 

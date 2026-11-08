@@ -92,8 +92,8 @@ class FileHelper:
             with open(path, encoding="utf-8") as f:
                 content = f.read()
             return content
-        except OSError:
-            raise OSError(f"Couldn't open file {path}")
+        except OSError as error:
+            raise OSError(f"Couldn't open file {path}") from error
 
 
 class ParsingCandidate:

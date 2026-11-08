@@ -61,9 +61,8 @@ class TestCLI(TestCase):
 
     def test_cli_rejects_title_with_url_input(self):
         error_output = StringIO()
-        with redirect_stderr(error_output):
-            with self.assertRaises(SystemExit) as error:
-                main(["--url", "https://example.test/a", "--title", "Unused"])
+        with redirect_stderr(error_output), self.assertRaises(SystemExit) as error:
+            main(["--url", "https://example.test/a", "--title", "Unused"])
 
         self.assertEqual(error.exception.code, 2)
         self.assertIn("--title", error_output.getvalue())
@@ -92,18 +91,16 @@ class TestCLI(TestCase):
 
     def test_cli_reports_the_version(self):
         version_output = StringIO()
-        with redirect_stdout(version_output):
-            with self.assertRaises(SystemExit) as error:
-                main(["--version"])
+        with redirect_stdout(version_output), self.assertRaises(SystemExit) as error:
+            main(["--version"])
 
         self.assertEqual(error.exception.code, 0)
         self.assertIn("pyteaser", version_output.getvalue())
 
     def test_cli_reports_url_errors_without_a_traceback(self):
         error_output = StringIO()
-        with redirect_stderr(error_output):
-            with self.assertRaises(SystemExit) as error:
-                main(["--url", "file:///etc/passwd"])
+        with redirect_stderr(error_output), self.assertRaises(SystemExit) as error:
+            main(["--url", "file:///etc/passwd"])
 
         self.assertEqual(error.exception.code, 2)
         self.assertIn("Could not fetch", error_output.getvalue())

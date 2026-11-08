@@ -106,7 +106,7 @@ class Parser:
             root.text = None
             root.insert(0, t)
         # loop childs
-        for c, n in enumerate(list(root)):
+        for _, n in enumerate(list(root)):
             idx = root.index(n)
             # don't process texts nodes
             if n.tag == "text":
@@ -180,7 +180,7 @@ class Parser:
     @classmethod
     def previousSiblings(cls, node):
         nodes = []
-        for c, n in enumerate(node.itersiblings(preceding=True)):
+        for n in node.itersiblings(preceding=True):
             nodes.append(n)
         return nodes
 
@@ -204,7 +204,7 @@ class Parser:
 
     @classmethod
     def isTextNode(cls, node):
-        return True if node.tag == "text" else False
+        return node.tag == "text"
 
     @classmethod
     def getAttribute(cls, node, attr=None):

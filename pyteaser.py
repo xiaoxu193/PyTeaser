@@ -1061,9 +1061,9 @@ def _should_split_after_period(text, punctuation_start, boundary_end):
     if abbreviation in _CONTEXTUAL_ABBREVIATIONS:
         return not next_initial or next_initial.isupper()
 
-    if len(abbreviation) == 1 and abbreviation.isalpha() and next_initial.isupper():
-        return False
-    return True
+    return not (
+        len(abbreviation) == 1 and abbreviation.isalpha() and next_initial.isupper()
+    )
 
 
 def length_score(sentence):

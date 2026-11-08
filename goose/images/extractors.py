@@ -272,10 +272,7 @@ class UpgradedImageIExtractor(ImageExtractor):
         if not src:
             return False
 
-        if self.badimages_names_re.search(src):
-            return False
-
-        return True
+        return self.badimages_names_re.search(src) is None
 
     def get_image_src(self, image_node):
         """Return the best available regular or lazy-loaded image URL."""
