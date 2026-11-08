@@ -169,9 +169,9 @@ class UpgradedImageIExtractor(ImageExtractor):
           in area from the first image
         """
         image_results = {}
-        initial_area = float(0.0)
-        total_score = float(0.0)
-        cnt = float(1.0)
+        initial_area = 0.0
+        total_score = 0.0
+        cnt = 1.0
         MIN_WIDTH = 50
         for image in images[:30]:
             src = self.get_image_src(image)

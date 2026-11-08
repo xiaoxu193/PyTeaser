@@ -58,7 +58,7 @@ class Configuration:
         # self.browser_user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2)"\
         #                         " AppleWebKit/534.52.7 (KHTML, like Gecko) "\
         #                         "Version/5.1.2 Safari/534.52.7"
-        self.browser_user_agent = "Goose/%s" % __version__
+        self.browser_user_agent = f"Goose/{__version__}"
 
         # Network safety and resource limits for article/image downloads.
         self.request_timeout = 10.0

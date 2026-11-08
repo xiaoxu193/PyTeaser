@@ -229,7 +229,7 @@ def fetch_bytes(config, url, max_bytes, accepted_content_types=None):
         if accepted_content_types:
             content_type = response.headers.get_content_type()
             if not _content_type_allowed(content_type, accepted_content_types):
-                raise ValueError("Unexpected response content type: %s" % content_type)
+                raise ValueError(f"Unexpected response content type: {content_type}")
         return _read_limited(response, max_bytes)
 
 

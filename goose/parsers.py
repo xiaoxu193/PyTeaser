@@ -66,7 +66,7 @@ class Parser:
 
     @classmethod
     def getElementById(cls, node, idd):
-        selector = '//*[@id="%s"]' % idd
+        selector = f'//*[@id="{idd}"]'
         elems = node.xpath(selector)
         if elems:
             return elems[0]
@@ -78,7 +78,7 @@ class Parser:
         # selector = tag or '*'
         selector = "descendant-or-self::%s" % (tag or "*")
         if attr and value:
-            selector = '%s[re:test(@%s, "%s", "i")]' % (selector, attr, value)
+            selector = f'{selector}[re:test(@{attr}, "{value}", "i")]'
         elems = node.xpath(selector, namespaces={"re": NS})
         # remove the root node
         # if we have a selection tag

@@ -126,7 +126,7 @@ class TestNetworkPolicy(TestCase):
             request_timeout=2,
             allow_private_network=True,
         )
-        url = "http://127.0.0.1:%s/" % server.server_port
+        url = f"http://127.0.0.1:{server.server_port}/"
 
         self.assertEqual(fetch_bytes(config, url, 1024, {"text/html"}), body)
 

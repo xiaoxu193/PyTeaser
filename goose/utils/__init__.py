@@ -67,7 +67,7 @@ class BuildURL:
 
         netloc = url_obj.netloc or hostname
         if not url_obj.netloc and url_obj.port:
-            netloc = "%s:%s" % (hostname, url_obj.port)
+            netloc = f"{hostname}:{url_obj.port}"
         return urlparse.urlunparse(
             (
                 scheme,
@@ -89,11 +89,11 @@ class FileHelper:
         else:
             path = filename
         try:
-            with open(path, "r", encoding="utf-8") as f:
+            with open(path, encoding="utf-8") as f:
                 content = f.read()
             return content
-        except IOError:
-            raise IOError("Couldn't open file %s" % path)
+        except OSError:
+            raise OSError(f"Couldn't open file {path}")
 
 
 class ParsingCandidate:
@@ -107,7 +107,7 @@ class RawHelper:
     def get_parsing_candidate(cls, url, raw_html):
         if isinstance(raw_html, str):
             raw_html = raw_html.encode("utf-8")
-        link_hash = "%s.%s" % (hashlib.md5(raw_html).hexdigest(), time.time())
+        link_hash = f"{hashlib.md5(raw_html).hexdigest()}.{time.time()}"
         return ParsingCandidate(url, link_hash)
 
 
@@ -120,7 +120,7 @@ class URLHelper:
             if "#!" in url_to_crawl
             else url_to_crawl
         )
-        link_hash = "%s.%s" % (
+        link_hash = "{}.{}".format(
             hashlib.md5(final_url.encode("utf-8")).hexdigest(),
             time.time(),
         )

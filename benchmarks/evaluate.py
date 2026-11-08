@@ -38,7 +38,7 @@ def main():
         scores.append(rouge_1_f1(example["reference"], " ".join(summary)))
 
     mean_score = sum(scores) / len(scores) if scores else 0.0
-    print("examples=%d rouge1_f1=%.3f" % (len(scores), mean_score))
+    print(f"examples={len(scores)} rouge1_f1={mean_score:.3f}")
     return 0
 
 

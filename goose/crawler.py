@@ -153,7 +153,7 @@ class Crawler:
         return StandardContentExtractor(self.config)
 
     def release_resources(self, article):
-        path = os.path.join(self.config.local_storage_path, "%s_*" % article.link_hash)
+        path = os.path.join(self.config.local_storage_path, f"{article.link_hash}_*")
         for fname in glob.glob(path):
             with contextlib.suppress(OSError):
                 os.remove(fname)

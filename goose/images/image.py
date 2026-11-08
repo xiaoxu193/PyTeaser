@@ -31,7 +31,7 @@ class Image:
 
         # how confident are we in this image extraction?
         # the most images generally the less confident
-        self.confidence_score = float(0.0)
+        self.confidence_score = 0.0
 
         # Height of the image in pixels
         self.height = 0
@@ -44,7 +44,7 @@ class Image:
         self.extraction_type = "NA"
 
         # stores how many bytes this image is.
-        self.bytes = int(0)
+        self.bytes = 0
 
     def get_src(self):
         return self.src
@@ -87,7 +87,7 @@ class LocallyStoredImage:
         src="",
         local_filename="",
         link_hash="",
-        bytes=int(0),
+        bytes=0,
         file_extension="",
         height=0,
         width=0,

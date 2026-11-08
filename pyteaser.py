@@ -14,6 +14,7 @@ import argparse
 import json
 from bisect import bisect_left
 from collections import Counter
+from collections.abc import Sequence
 from dataclasses import dataclass
 from importlib import resources
 from math import isfinite
@@ -21,7 +22,6 @@ from pathlib import Path
 from re import UNICODE as REGEX_UNICODE
 from re import search as regex_search
 from re import sub as regex_sub
-from typing import Sequence
 
 __version__ = "2.0.0"
 
@@ -527,12 +527,10 @@ def _fetch_article(
     try:
         article = grab_link(url)
     except FetchError as error:
-        raise ArticleFetchError(
-            "Could not fetch the article URL: %s" % error
-        ) from error
+        raise ArticleFetchError(f"Could not fetch the article URL: {error}") from error
     except (LxmlError, OSError, TypeError, ValueError) as error:
         raise ArticleExtractionError(
-            "Could not extract an article from the URL: %s" % error
+            f"Could not extract an article from the URL: {error}"
         ) from error
 
     if not (article and article.cleaned_text and article.title):
@@ -720,7 +718,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             for sentence in summary:
                 print(sentence)
     except (PyTeaserError, OSError, TypeError, ValueError) as error:
-        parser.exit(2, "pyteaser: %s\n" % error)
+        parser.exit(2, f"pyteaser: {error}\n")
 
     return 0
 
@@ -755,9 +753,9 @@ def _coerce_text(value, name, allow_none=False):
         try:
             value = value.decode("utf-8")
         except UnicodeDecodeError as error:
-            raise ValueError("%s must contain valid UTF-8" % name) from error
+            raise ValueError(f"{name} must contain valid UTF-8") from error
     if not isinstance(value, str):
-        raise TypeError("%s must be a string or UTF-8 bytes" % name)
+        raise TypeError(f"{name} must be a string or UTF-8 bytes")
     return value
 
 
@@ -767,7 +765,7 @@ def _normalize_language(language):
     language = _coerce_text(language, "language")
     language = language.replace("_", "-").split("-", 1)[0].casefold()
     if language not in _SUPPORTED_LANGUAGES:
-        raise ValueError("Unsupported language: %s" % language)
+        raise ValueError(f"Unsupported language: {language}")
     return language
 
 
@@ -776,12 +774,12 @@ def _load_stop_words(language):
     if language not in _STOP_WORDS_CACHE:
         try:
             resource = resources.files("goose.resources.text").joinpath(
-                "stopwords-%s.txt" % language
+                f"stopwords-{language}.txt"
             )
             content = resource.read_text(encoding="utf-8")
         except (OSError, UnicodeError, ModuleNotFoundError) as error:
             raise ValueError(
-                "Stopword resource is missing for language: %s" % language
+                f"Stopword resource is missing for language: {language}"
             ) from error
         _STOP_WORDS_CACHE[language] = {
             line.strip().casefold()

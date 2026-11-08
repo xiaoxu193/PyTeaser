@@ -55,7 +55,7 @@ class TestSummarize(TestCase):
             ],
         )
         self.assertEqual(
-            Summarize("Café".encode("utf-8"), "Café matters.".encode("utf-8")),
+            Summarize("Café".encode(), "Café matters.".encode()),
             [
                 "Café matters.",
             ],
@@ -245,7 +245,7 @@ class TestSummarize(TestCase):
 
         for language in sorted(_SUPPORTED_LANGUAGES):
             stop_words = _load_stop_words(language)
-            self.assertTrue(stop_words, "empty stopword list for %s" % language)
+            self.assertTrue(stop_words, f"empty stopword list for {language}")
             self.assertTrue(
                 all(word == word.casefold() for word in stop_words), language
             )

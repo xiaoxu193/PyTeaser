@@ -292,7 +292,7 @@ class ContentExtractor:
                     o = urlparse(href)
                     if not o.hostname:
                         z = urlparse(article.final_url)
-                        domain = "%s://%s" % (z.scheme, z.hostname)
+                        domain = f"{z.scheme}://{z.hostname}"
                         href = urljoin(domain, href)
                     return href
         return article.final_url
@@ -330,7 +330,7 @@ class ContentExtractor:
         top_node = None
         nodes_to_check = self.nodes_to_check(doc)
 
-        starting_boost = float(1.0)
+        starting_boost = 1.0
         cnt = 0
         i = 0
         parent_nodes = []
@@ -467,7 +467,7 @@ class ContentExtractor:
                     if len(text) > 0:
                         word_stats = self.get_word_stats(text)
                         paragraph_score = word_stats.get_stopword_count()
-                        sibling_baseline_score = float(0.30)
+                        sibling_baseline_score = 0.30
                         high_link_density = self.is_highlink_density(first_paragraph)
                         score = float(
                             baselinescore_siblings_para * sibling_baseline_score
