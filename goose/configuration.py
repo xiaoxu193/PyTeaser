@@ -71,10 +71,12 @@ class Configuration:
         # sent to stdout
         self.debug = False
 
-        # TODO
+        # Optional hook overriding the extracted publish date
+        # (a concrete PublishDateExtractor instance).
         self.extract_publishdate = None
 
-        # TODO
+        # Optional hook for extra site-specific data
+        # (a concrete AdditionalDataExtractor instance).
         self.additional_data_extractor = None
 
         # Parser type

@@ -84,8 +84,7 @@ class StopWords:
     _cached_stop_words = {}
 
     def __init__(self, language="en"):
-        # TODO replace 'x' with class
-        # to generate dynamic path for file to load
+        # Stopword lists ship as package data under goose/resources/.
         if language not in self._cached_stop_words:
             path = os.path.join("text", f"stopwords-{language}.txt")
             self._cached_stop_words[language] = set(

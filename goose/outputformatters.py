@@ -122,8 +122,6 @@ class OutputFormatter:
                 and len(self.parser.getElementsByTag(el, tag="embed")) == 0
             ):
                 self.parser.remove(el)
-            # TODO
-            # check if it is in the right place
             else:
                 trimmed = self.parser.getText(el)
                 if trimmed.startswith("(") and trimmed.endswith(")"):
