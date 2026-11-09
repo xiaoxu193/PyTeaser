@@ -1075,7 +1075,7 @@ def length_score(sentence):
 
 def title_score(title, sentence, stop_words=None):
     if stop_words is None:
-        stop_words = stopWords
+        stop_words = _load_stop_words("en")
     title_terms = {word for word in title if word not in stop_words}
     if not title_terms:
         return 0.0
