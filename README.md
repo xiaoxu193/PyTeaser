@@ -1,5 +1,10 @@
 # PyTeaser
 
+[![CI](https://github.com/xiaoxu193/PyTeaser/actions/workflows/ci.yml/badge.svg)](https://github.com/xiaoxu193/PyTeaser/actions/workflows/ci.yml)
+[![PyPI version](https://img.shields.io/pypi/v/pyteaser.svg)](https://pypi.org/project/pyteaser/)
+[![Python versions](https://img.shields.io/pypi/pyversions/pyteaser.svg)](https://pypi.org/project/pyteaser/)
+[![License](https://img.shields.io/pypi/l/pyteaser.svg)](LICENSE)
+
 PyTeaser extracts a short, extractive summary from article text or a news URL. It ranks sentences using title relevance, article keywords, sentence length, and position, then removes repeated content and returns the selected sentences in the article's original order.
 
 ## Requirements and installation
@@ -92,8 +97,18 @@ Use article extraction responsibly and comply with the target site's terms and a
 The test suite is offline; URL cases use mocked responses or a local loopback server.
 
 ```bash
+python -m pip install -e '.[all,dev]'
 python -m unittest discover -v
+ruff check .
+ruff format --check .
+python benchmarks/evaluate.py
 ```
+
+## Development
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, pull request guidelines, and
+[CHANGELOG.md](CHANGELOG.md) for release history. Security reports follow the
+policy in [SECURITY.md](SECURITY.md).
 
 ## License
 
