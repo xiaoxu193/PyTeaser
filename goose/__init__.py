@@ -58,9 +58,9 @@ class Goose:
     def shutdown_network(self):
         pass
 
-    def crawl(self, crawl_candiate):
+    def crawl(self, crawl_candidate):
         crawler = Crawler(self.config)
-        article = crawler.crawl(crawl_candiate)
+        article = crawler.crawl(crawl_candidate)
         return article
 
     def initialize(self):
