@@ -57,11 +57,11 @@ Homepage = "https://github.com/xiaoxu193/PyTeaser"
 Issues = "https://github.com/xiaoxu193/PyTeaser/issues"
 Changelog = "https://github.com/xiaoxu193/PyTeaser/blob/main/CHANGELOG.md"
 
-[tool.setuptools]
-py-modules = ["pyteaser"]
+[tool.setuptools.package-data]
+pyteaser = ["py.typed"]
 
 [tool.setuptools.packages.find]
-include = ["goose*"]
+include = ["pyteaser*", "goose*"]
 
 [tool.setuptools.dynamic]
 version = { attr = "pyteaser.__version__" }

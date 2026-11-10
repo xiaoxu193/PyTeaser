@@ -1098,7 +1098,3 @@ def sentence_position(i, size):
     if not 0 < normalized <= 1.0:
         return 0.0
     return _POSITION_SCORES[bisect_left(_POSITION_BOUNDARIES, normalized)]
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
