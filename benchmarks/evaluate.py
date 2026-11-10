@@ -35,15 +35,19 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--sentence-count", type=int, default=2)
     parser.add_argument(
-        "--min-score", type=float, default=None,
-        help="exit nonzero when the mean score falls below this threshold")
+        "--min-score",
+        type=float,
+        default=None,
+        help="exit nonzero when the mean score falls below this threshold",
+    )
     args = parser.parse_args(argv)
 
     scores = []
     for line in DATASET.read_text(encoding="utf-8").splitlines():
         example = json.loads(line)
         summary = summarize(
-            example["title"], example["text"], sentence_count=args.sentence_count)
+            example["title"], example["text"], sentence_count=args.sentence_count
+        )
         scores.append(rouge_1_f1(example["reference"], " ".join(summary)))
 
     mean_score = sum(scores) / len(scores) if scores else 0.0
