@@ -58,7 +58,7 @@ Issues = "https://github.com/xiaoxu193/PyTeaser/issues"
 Changelog = "https://github.com/xiaoxu193/PyTeaser/blob/main/CHANGELOG.md"
 
 [tool.setuptools.package-data]
-pyteaser = ["py.typed"]
+pyteaser = ["py.typed", "resources/stopwords-en.txt"]
 
 [tool.setuptools.packages.find]
 include = ["pyteaser*", "goose*"]
