@@ -77,7 +77,7 @@ The legacy `SummarizeUrl(url)` function remains available. URL summarization ret
 
 ## URL and image safety
 
-URL fetching accepts HTTP(S) on standard ports, applies a 10-second request timeout and a 5 MiB HTML limit, validates resolved addresses and redirect targets, and blocks private/non-routable addresses by default. Image fetching is disabled by default; enable it only when needed:
+URL fetching accepts HTTP(S), applies a 10-second request timeout and a 5 MiB HTML limit, validates resolved addresses and redirect targets, blocks private/non-routable addresses by default, and restricts destination ports to 80/443 (configurable via Goose's `allowed_ports`, or `None` to disable) independently of the private-network setting. Image fetching is disabled by default; enable it only when needed:
 
 ```python
 from goose import Goose

@@ -34,6 +34,19 @@ class TestNetworkPolicy(TestCase):
         with self.assertRaises(ValueError):
             validate_url("http://127.0.0.1/")
 
+    def test_rejects_non_standard_port_by_default(self):
+        with self.assertRaises(ValueError):
+            validate_url("http://1.1.1.1:8080/")
+
+    def test_allows_port_when_configured(self):
+        parsed = validate_url("http://1.1.1.1:8080/", allowed_ports=(8080,))
+        self.assertEqual(parsed.port, 8080)
+
+    def test_port_restriction_is_independent_of_private_network(self):
+        # allow_private_network controls host reachability, not the port policy
+        with self.assertRaises(ValueError):
+            validate_url("http://127.0.0.1:8080/", allow_private_network=True)
+
     @patch(
         "goose.network.socket.getaddrinfo",
         return_value=[(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("127.0.0.1", 443))],
@@ -53,6 +66,18 @@ class TestNetworkPolicy(TestCase):
                 "Found",
                 {},
                 "http://127.0.0.1/",
+            )
+
+    def test_redirect_handler_rejects_non_standard_port(self):
+        handler = SafeRedirectHandler()
+        with self.assertRaises(ValueError):
+            handler.redirect_request(
+                Request("https://1.1.1.1/"),
+                None,
+                302,
+                "Found",
+                {},
+                "http://1.1.1.1:8080/",
             )
 
     def test_read_limit_rejects_oversized_response(self):
@@ -127,6 +152,7 @@ class TestNetworkPolicy(TestCase):
             browser_user_agent="PyTeaser test",
             request_timeout=2,
             allow_private_network=True,
+            allowed_ports=None,
         )
         url = f"http://127.0.0.1:{server.server_port}/"
 

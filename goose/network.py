@@ -36,6 +36,8 @@ from urllib.request import (
     build_opener,
 )
 
+DEFAULT_ALLOWED_PORTS = (80, 443)
+
 
 class FetchError(IOError):
     """Raised when a page cannot be fetched within the configured policy."""
@@ -61,8 +63,13 @@ def _resolve_addresses(host, port, allow_private_network=False):
     return [str(address) for address in addresses]
 
 
-def validate_url(url, allow_private_network=False):
-    """Validate an HTTP(S) URL and reject hosts that resolve to local networks."""
+def validate_url(url, allow_private_network=False, allowed_ports=DEFAULT_ALLOWED_PORTS):
+    """Validate an HTTP(S) URL and reject hosts that resolve to local networks.
+
+    ``allowed_ports`` is the set of destination ports permitted in the URL
+    (``None`` disables the restriction); ``allow_private_network`` only
+    controls whether private and non-routable hosts may be reached.
+    """
     if isinstance(url, bytes):
         url = url.decode("utf-8")
     if not isinstance(url, str):
@@ -80,17 +87,28 @@ def validate_url(url, allow_private_network=False):
         raise ValueError("URL must include a hostname")
     if parsed.username is not None or parsed.password is not None:
         raise ValueError("Credentials in URLs are not allowed")
-    expected_port = 443 if parsed.scheme.lower() == "https" else 80
-    if port is not None and port != expected_port and not allow_private_network:
-        raise ValueError("Only standard HTTP and HTTPS ports are allowed")
+    if allowed_ports is not None and port is not None and port not in allowed_ports:
+        raise ValueError("Only the configured HTTP and HTTPS ports are allowed")
 
     if allow_private_network:
         return parsed
 
     _resolve_addresses(
-        parsed.hostname.rstrip("."), port or expected_port, allow_private_network
+        parsed.hostname.rstrip("."),
+        port or expected_default_port(parsed.scheme),
+        allow_private_network,
     )
     return parsed
+
+
+def expected_default_port(scheme):
+    """Return the implicit port for a URL scheme, or ``None`` if unknown."""
+    scheme = scheme.lower()
+    if scheme == "https":
+        return 443
+    if scheme == "http":
+        return 80
+    return None
 
 
 def _create_validated_socket(
@@ -176,12 +194,15 @@ class SafeHTTPSHandler(HTTPSHandler):
 class SafeRedirectHandler(HTTPRedirectHandler):
     """Revalidate every redirect target before allowing urllib to follow it."""
 
-    def __init__(self, allow_private_network=False):
+    def __init__(
+        self, allow_private_network=False, allowed_ports=DEFAULT_ALLOWED_PORTS
+    ):
         super().__init__()
         self.allow_private_network = allow_private_network
+        self.allowed_ports = allowed_ports
 
     def redirect_request(self, request, response, code, message, headers, new_url):
-        validate_url(new_url, self.allow_private_network)
+        validate_url(new_url, self.allow_private_network, self.allowed_ports)
         return super().redirect_request(
             request, response, code, message, headers, new_url
         )
@@ -207,9 +228,10 @@ def _content_type_allowed(content_type, allowed_types):
 def fetch_bytes(config, url, max_bytes, accepted_content_types=None):
     """Fetch a bounded response using the configured timeout and URL policy."""
     allow_private = bool(getattr(config, "allow_private_network", False))
+    allowed_ports = getattr(config, "allowed_ports", DEFAULT_ALLOWED_PORTS)
     if isinstance(url, bytes):
         url = url.decode("utf-8")
-    validate_url(url, allow_private)
+    validate_url(url, allow_private, allowed_ports)
 
     timeout = float(getattr(config, "request_timeout", 10.0))
     max_bytes = int(max_bytes)
@@ -221,11 +243,11 @@ def fetch_bytes(config, url, max_bytes, accepted_content_types=None):
         HTTPCookieProcessor(CookieJar()),
         SafeHTTPHandler(allow_private),
         SafeHTTPSHandler(allow_private),
-        SafeRedirectHandler(allow_private),
+        SafeRedirectHandler(allow_private, allowed_ports),
     )
     request = Request(url, headers={"User-agent": config.browser_user_agent})
     with opener.open(request, timeout=timeout) as response:
-        validate_url(response.geturl(), allow_private)
+        validate_url(response.geturl(), allow_private, allowed_ports)
         if accepted_content_types:
             content_type = response.headers.get_content_type()
             if not _content_type_allowed(content_type, accepted_content_types):

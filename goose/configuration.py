@@ -65,6 +65,9 @@ class Configuration:
         self.max_html_bytes = 5 * 1024 * 1024
         self.max_image_bytes = 15 * 1024 * 1024
         self.allow_private_network = False
+        # Destination ports accepted in fetched and redirected URLs;
+        # set to None to disable the port restriction.
+        self.allowed_ports = (80, 443)
 
         # debug mode
         # enable this to have additional debugging information
