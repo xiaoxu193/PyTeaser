@@ -177,6 +177,8 @@ def SummarizeUrl(
     max_words: int | None = None,
     weights: ScoringWeights | dict[str, float] | None = None,
     keyword_scoring: str = "frequency",
+    selection: str = "jaccard",
+    mmr_lambda: float = 0.7,
 ) -> list[str]:
     sentence_count = _validate_sentence_count(sentence_count)
     max_words = _validate_max_words(max_words)
@@ -193,6 +195,8 @@ def SummarizeUrl(
         max_words=max_words,
         weights=weights,
         keyword_scoring=keyword_scoring,
+        selection=selection,
+        mmr_lambda=mmr_lambda,
     )
 
 
@@ -204,6 +208,8 @@ def Summarize(
     max_words: int | None = None,
     weights: ScoringWeights | dict[str, float] | None = None,
     keyword_scoring: str = "frequency",
+    selection: str = "jaccard",
+    mmr_lambda: float = 0.7,
 ) -> list[str]:
     """Return an extractive summary for a title and article text.
 
@@ -214,7 +220,15 @@ def Summarize(
     return [
         result.sentence
         for result in summarize_detailed(
-            title, text, sentence_count, language, max_words, weights, keyword_scoring
+            title,
+            text,
+            sentence_count,
+            language,
+            max_words,
+            weights,
+            keyword_scoring,
+            selection,
+            mmr_lambda,
         )
     ]
 
@@ -227,6 +241,8 @@ def summarize_detailed(
     max_words: int | None = None,
     weights: ScoringWeights | dict[str, float] | None = None,
     keyword_scoring: str = "frequency",
+    selection: str = "jaccard",
+    mmr_lambda: float = 0.7,
 ) -> list[ScoredSentence]:
     """Return selected sentences with their source indices and scores."""
     sentence_count = _validate_sentence_count(sentence_count)
@@ -260,6 +276,8 @@ def summarize_detailed(
         language=language,
         stop_words=active_stop_words,
         max_words=max_words,
+        selection=selection,
+        mmr_lambda=mmr_lambda,
     )
     selected.sort(key=lambda result: result[0])
     return [
@@ -290,6 +308,18 @@ def main(argv: Sequence[str] | None = None) -> int:
         choices=("frequency", "tfidf"),
         default="frequency",
         help="keyword weighting used while ranking sentences",
+    )
+    parser.add_argument(
+        "--selection",
+        choices=("jaccard", "mmr"),
+        default="jaccard",
+        help="redundancy filter applied while selecting sentences",
+    )
+    parser.add_argument(
+        "--mmr-lambda",
+        type=float,
+        default=0.7,
+        help="score/diversity trade-off for --selection mmr (0..1)",
     )
     parser.add_argument(
         "--language", default=None, help="language code such as en or es"
@@ -327,6 +357,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                 language=language,
                 max_words=args.max_words,
                 keyword_scoring=args.keyword_scoring,
+                selection=args.selection,
+                mmr_lambda=args.mmr_lambda,
             )
             print(
                 json.dumps(
@@ -350,6 +382,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                 language=language,
                 max_words=args.max_words,
                 keyword_scoring=args.keyword_scoring,
+                selection=args.selection,
+                mmr_lambda=args.mmr_lambda,
             )
             for sentence in summary:
                 print(sentence)
@@ -367,10 +401,20 @@ def summarize(
     max_words: int | None = None,
     weights: ScoringWeights | dict[str, float] | None = None,
     keyword_scoring: str = "frequency",
+    selection: str = "jaccard",
+    mmr_lambda: float = 0.7,
 ) -> list[str]:
     """PEP 8 spelling of :func:`Summarize`."""
     return Summarize(
-        title, text, sentence_count, language, max_words, weights, keyword_scoring
+        title,
+        text,
+        sentence_count,
+        language,
+        max_words,
+        weights,
+        keyword_scoring,
+        selection,
+        mmr_lambda,
     )
 
 
@@ -381,10 +425,19 @@ def summarize_url(
     max_words: int | None = None,
     weights: ScoringWeights | dict[str, float] | None = None,
     keyword_scoring: str = "frequency",
+    selection: str = "jaccard",
+    mmr_lambda: float = 0.7,
 ) -> list[str]:
     """PEP 8 spelling of :func:`SummarizeUrl`."""
     return SummarizeUrl(
-        url, sentence_count, language, max_words, weights, keyword_scoring
+        url,
+        sentence_count,
+        language,
+        max_words,
+        weights,
+        keyword_scoring,
+        selection,
+        mmr_lambda,
     )
 
 
@@ -471,37 +524,101 @@ def _select_non_redundant(
     language="en",
     stop_words=None,
     max_words=None,
+    selection="jaccard",
+    mmr_lambda=0.7,
 ):
-    """Select high-ranked sentences while avoiding excessive word overlap."""
+    """Select high-ranked sentences while avoiding excessive word overlap.
+
+    ``selection="jaccard"`` skips a candidate whose term overlap with an
+    already selected sentence reaches ``threshold``. ``selection="mmr"``
+    instead maximizes marginal relevance, trading each candidate's score
+    against its similarity to the selected set using ``mmr_lambda`` (1.0
+    ranks purely by score, 0.0 purely by diversity).
+    """
     if stop_words is None:
         stop_words = _load_stop_words(language)
-    selected = []
-    selected_terms = []
-    selected_text = set()
-    selected_word_count = 0
-    for candidate in ranked:
-        words = split_words(candidate[1], language)
-        if max_words is not None and selected_word_count + len(words) > max_words:
-            continue
-        normalized_text = " ".join(words) or candidate[1].strip().casefold()
-        if normalized_text in selected_text:
-            continue
+    if selection not in ("jaccard", "mmr"):
+        raise ValueError(f"Unsupported selection strategy: {selection}")
+    if not 0.0 <= mmr_lambda <= 1.0:
+        raise ValueError("mmr_lambda must be between 0 and 1")
 
+    candidates = []
+    for entry in ranked:
+        words = split_words(entry[1], language)
         terms = set(words)
         content_terms = terms.difference(stop_words)
         if content_terms:
             terms = content_terms
+        candidates.append(
+            {
+                "entry": entry,
+                "words": words,
+                "normalized_text": " ".join(words) or entry[1].strip().casefold(),
+                "terms": terms,
+            }
+        )
 
-        if len(terms) >= 3 and any(
-            len(existing) >= 3 and _jaccard_similarity(terms, existing) >= threshold
+    selected = []
+    selected_terms = []
+    selected_text = set()
+    # word counts of the admitted sentences, as a running budget
+    selected_word_counts = []
+
+    def admit(candidate):
+        selected.append(candidate["entry"])
+        selected_terms.append(candidate["terms"])
+        selected_text.add(candidate["normalized_text"])
+        selected_word_counts.append(len(candidate["words"]))
+
+    if selection == "mmr":
+        remaining = list(candidates)
+        max_score = max((c["entry"][2] for c in candidates), default=0.0)
+        while remaining and len(selected) < sentence_count:
+            best = None
+            best_key = None
+            for candidate in remaining:
+                if (
+                    max_words is not None
+                    and sum(selected_word_counts) + len(candidate["words"]) > max_words
+                ):
+                    continue
+                if candidate["normalized_text"] in selected_text:
+                    continue
+                similarity = max(
+                    (
+                        _jaccard_similarity(candidate["terms"], existing)
+                        for existing in selected_terms
+                    ),
+                    default=0.0,
+                )
+                relevance = candidate["entry"][2] / max_score if max_score > 0 else 0.0
+                key = mmr_lambda * relevance - (1.0 - mmr_lambda) * similarity
+                if best_key is None or key > best_key:
+                    best = candidate
+                    best_key = key
+            if best is None:
+                break
+            remaining.remove(best)
+            admit(best)
+        return selected
+
+    for candidate in candidates:
+        if (
+            max_words is not None
+            and sum(selected_word_counts) + len(candidate["words"]) > max_words
+        ):
+            continue
+        if candidate["normalized_text"] in selected_text:
+            continue
+
+        if len(candidate["terms"]) >= 3 and any(
+            len(existing) >= 3
+            and _jaccard_similarity(candidate["terms"], existing) >= threshold
             for existing in selected_terms
         ):
             continue
 
-        selected.append(candidate)
-        selected_terms.append(terms)
-        selected_text.add(normalized_text)
-        selected_word_count += len(words)
+        admit(candidate)
         if len(selected) == sentence_count:
             break
     return selected

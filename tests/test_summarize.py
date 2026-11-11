@@ -240,6 +240,40 @@ class TestSummarize(TestCase):
             ["Researchers confirmed several findings."],
         )
 
+    def test_mmr_selection_trades_score_for_diversity(self):
+        sentences = [
+            "alpha beta gamma delta epsilon",
+            "alpha beta gamma zeta eta",
+            "theta iota kappa lambda mu",
+        ]
+        ranked = [
+            (0, sentences[0], 10.0),
+            (1, sentences[1], 9.0),
+            (2, sentences[2], 8.0),
+        ]
+
+        with patch("pyteaser.score", return_value=ranked):
+            jaccard = Summarize("Title", " ".join(sentences), sentence_count=2)
+        with patch("pyteaser.score", return_value=ranked):
+            mmr = Summarize(
+                "Title",
+                " ".join(sentences),
+                sentence_count=2,
+                selection="mmr",
+                mmr_lambda=0.5,
+            )
+
+        # The threshold filter keeps the overlapping sentence; MMR swaps it
+        # for the diverse one once similarity is penalized.
+        self.assertEqual(jaccard, [sentences[0], sentences[1]])
+        self.assertEqual(mmr, [sentences[0], sentences[2]])
+
+    def test_invalid_selection_strategy_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "selection strategy"):
+            Summarize("Title", "Article text.", selection="nope")
+        with self.assertRaisesRegex(ValueError, "mmr_lambda"):
+            Summarize("Title", "Article text.", selection="mmr", mmr_lambda=1.5)
+
     def test_tfidf_keyword_scoring_downweights_ubiquitous_terms(self):
         text = (
             "Reactor maintenance finished early. "

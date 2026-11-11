@@ -45,6 +45,8 @@ Scoring weights default to title `1.5`, keyword frequency `2.0`, length `1.0`, a
 
 By default keywords are ranked by their share of the article. Pass `keyword_scoring="tfidf"` to weight words by how selectively they spread across the article's sentences, which downgrades boilerplate that appears everywhere. The CLI exposes the same choice as `--keyword-scoring {frequency,tfidf}`.
 
+Sentence selection defaults to a Jaccard overlap threshold that skips near-duplicate candidates. Pass `selection="mmr"` to use maximal marginal relevance instead, balancing each candidate's rank against its similarity to the sentences already chosen; `mmr_lambda` (0..1, default 0.7) tunes that trade-off. The CLI exposes these as `--selection mmr --mmr-lambda`.
+
 For score inspection, `summarize_detailed(...)` returns records with each selected sentence's original `index`, text in `sentence`, and overall `score`. The normal APIs continue to return plain strings.
 
 ## Command line
