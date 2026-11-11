@@ -43,6 +43,11 @@ _SUPPORTED_LANGUAGES = {"ar", "de", "en", "es", "fr", "it", "ru", "sv", "zh"}
 _STOP_WORDS_CACHE = {"en": stopWords}
 # Sentence length (in words) that scores highest in the length feature.
 IDEAL_SENTENCE_LENGTH = 20.0
+
+# Languages whose tokenization yields longer token sequences per sentence.
+# Chinese falls back to per-character tokens without jieba; at roughly
+# 1.5-1.7 characters per word, a 20-word sentence spans about 30 tokens.
+_LANGUAGE_IDEAL_LENGTHS = {"zh": 30.0}
 TITLE_WEIGHT = 1.5
 FREQUENCY_WEIGHT = 2.0
 LENGTH_WEIGHT = 1.0
@@ -653,7 +658,7 @@ def score(
     for i, s in enumerate(sentences):
         sentence = split_words(s, language)
         titleFeature = title_score(titleWords, sentence, stop_words)
-        sentenceLength = length_score(sentence)
+        sentenceLength = length_score(sentence, _ideal_length_for(language))
         sentencePosition = sentence_position(i + 1, senSize)
         sbsFeature = sbs(sentence, keywords)
         dbsFeature = dbs(sentence, keywords)
@@ -857,11 +862,14 @@ def _should_split_after_period(text, punctuation_start, boundary_end):
     )
 
 
-def length_score(sentence):
-    return max(
-        0.0,
-        1.0 - abs(IDEAL_SENTENCE_LENGTH - len(sentence)) / IDEAL_SENTENCE_LENGTH,
-    )
+def _ideal_length_for(language):
+    """Return the ideal sentence length (in tokens) for a language."""
+    return _LANGUAGE_IDEAL_LENGTHS.get(language, IDEAL_SENTENCE_LENGTH)
+
+
+def length_score(sentence, ideal=IDEAL_SENTENCE_LENGTH):
+    """Score a sentence by how close its length is to ``ideal`` tokens."""
+    return max(0.0, 1.0 - abs(ideal - len(sentence)) / ideal)
 
 
 def title_score(title, sentence, stop_words=None):

@@ -8,6 +8,7 @@ from unittest.mock import patch
 from pyteaser import (
     ScoringWeights,
     Summarize,
+    _ideal_length_for,
     keywords,
     length_score,
     score,
@@ -360,6 +361,13 @@ class TestSummarize(TestCase):
     def test_unsupported_language_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "Unsupported language"):
             Summarize("Title", "Article text.", language="xx")
+
+    def test_ideal_sentence_length_is_language_aware(self):
+        self.assertEqual(_ideal_length_for("en"), 20.0)
+        self.assertEqual(_ideal_length_for("es"), 20.0)
+        self.assertEqual(_ideal_length_for("zh"), 30.0)
+        self.assertEqual(length_score(["word"] * 30, ideal=30.0), 1.0)
+        self.assertEqual(length_score(["word"] * 30), 0.5)
 
     def test_length_score_is_bounded(self):
         self.assertEqual(length_score(["word"] * 20), 1.0)

@@ -41,7 +41,7 @@ for sentence in summary:
 
 `title` may be `None`; article text must be a string or UTF-8 bytes. Blank text returns an empty list. `sentence_count` defaults to 5, must be a non-negative integer, and may be set to 0 to request no sentences. Optional `max_words` sets a total token budget; candidates that do not fit are skipped.
 
-Scoring weights default to title `1.5`, keyword frequency `2.0`, length `1.0`, and position `1.0`. Pass a `ScoringWeights` instance or a dictionary with those feature names to tune the heuristic.
+Scoring weights default to title `1.5`, keyword frequency `2.0`, length `1.0`, and position `1.0`. Pass a `ScoringWeights` instance or a dictionary with those feature names to tune the heuristic. The length feature targets roughly 20 words per sentence (about 30 tokens for Chinese, where fallback tokenization is per character).
 
 By default keywords are ranked by their share of the article. Pass `keyword_scoring="tfidf"` to weight words by how selectively they spread across the article's sentences, which downgrades boilerplate that appears everywhere. The CLI exposes the same choice as `--keyword-scoring {frequency,tfidf}`.
 
