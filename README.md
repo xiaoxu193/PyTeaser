@@ -43,6 +43,8 @@ for sentence in summary:
 
 Scoring weights default to title `1.5`, keyword frequency `2.0`, length `1.0`, and position `1.0`. Pass a `ScoringWeights` instance or a dictionary with those feature names to tune the heuristic.
 
+By default keywords are ranked by their share of the article. Pass `keyword_scoring="tfidf"` to weight words by how selectively they spread across the article's sentences, which downgrades boilerplate that appears everywhere. The CLI exposes the same choice as `--keyword-scoring {frequency,tfidf}`.
+
 For score inspection, `summarize_detailed(...)` returns records with each selected sentence's original `index`, text in `sentence`, and overall `score`. The normal APIs continue to return plain strings.
 
 ## Command line

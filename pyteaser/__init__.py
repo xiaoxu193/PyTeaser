@@ -17,7 +17,7 @@ from bisect import bisect_left
 from collections import Counter
 from collections.abc import Sequence
 from dataclasses import dataclass
-from math import isfinite
+from math import isfinite, log
 from pathlib import Path
 from re import UNICODE as REGEX_UNICODE
 from re import search as regex_search
@@ -176,6 +176,7 @@ def SummarizeUrl(
     language: str | None = None,
     max_words: int | None = None,
     weights: ScoringWeights | dict[str, float] | None = None,
+    keyword_scoring: str = "frequency",
 ) -> list[str]:
     sentence_count = _validate_sentence_count(sentence_count)
     max_words = _validate_max_words(max_words)
@@ -191,6 +192,7 @@ def SummarizeUrl(
         language=resolved_language,
         max_words=max_words,
         weights=weights,
+        keyword_scoring=keyword_scoring,
     )
 
 
@@ -201,6 +203,7 @@ def Summarize(
     language: str = "en",
     max_words: int | None = None,
     weights: ScoringWeights | dict[str, float] | None = None,
+    keyword_scoring: str = "frequency",
 ) -> list[str]:
     """Return an extractive summary for a title and article text.
 
@@ -211,7 +214,7 @@ def Summarize(
     return [
         result.sentence
         for result in summarize_detailed(
-            title, text, sentence_count, language, max_words, weights
+            title, text, sentence_count, language, max_words, weights, keyword_scoring
         )
     ]
 
@@ -223,6 +226,7 @@ def summarize_detailed(
     language: str = "en",
     max_words: int | None = None,
     weights: ScoringWeights | dict[str, float] | None = None,
+    keyword_scoring: str = "frequency",
 ) -> list[ScoredSentence]:
     """Return selected sentences with their source indices and scores."""
     sentence_count = _validate_sentence_count(sentence_count)
@@ -239,7 +243,7 @@ def summarize_detailed(
     sentences = split_sentences(text)
     if not sentences:
         return []
-    keys = keywords(text, language, active_stop_words)
+    keys = keywords(text, language, active_stop_words, method=keyword_scoring)
     titleWords = split_words(title, language)
 
     # Rank each occurrence separately, select the best sentences, then restore
@@ -282,6 +286,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--sentence-count", type=int, default=5)
     parser.add_argument("--max-words", type=int, default=None)
     parser.add_argument(
+        "--keyword-scoring",
+        choices=("frequency", "tfidf"),
+        default="frequency",
+        help="keyword weighting used while ranking sentences",
+    )
+    parser.add_argument(
         "--language", default=None, help="language code such as en or es"
     )
     parser.add_argument(
@@ -316,6 +326,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 sentence_count=args.sentence_count,
                 language=language,
                 max_words=args.max_words,
+                keyword_scoring=args.keyword_scoring,
             )
             print(
                 json.dumps(
@@ -338,6 +349,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 sentence_count=args.sentence_count,
                 language=language,
                 max_words=args.max_words,
+                keyword_scoring=args.keyword_scoring,
             )
             for sentence in summary:
                 print(sentence)
@@ -354,9 +366,12 @@ def summarize(
     language: str = "en",
     max_words: int | None = None,
     weights: ScoringWeights | dict[str, float] | None = None,
+    keyword_scoring: str = "frequency",
 ) -> list[str]:
     """PEP 8 spelling of :func:`Summarize`."""
-    return Summarize(title, text, sentence_count, language, max_words, weights)
+    return Summarize(
+        title, text, sentence_count, language, max_words, weights, keyword_scoring
+    )
 
 
 def summarize_url(
@@ -365,9 +380,12 @@ def summarize_url(
     language: str | None = None,
     max_words: int | None = None,
     weights: ScoringWeights | dict[str, float] | None = None,
+    keyword_scoring: str = "frequency",
 ) -> list[str]:
     """PEP 8 spelling of :func:`SummarizeUrl`."""
-    return SummarizeUrl(url, sentence_count, language, max_words, weights)
+    return SummarizeUrl(
+        url, sentence_count, language, max_words, weights, keyword_scoring
+    )
 
 
 def _coerce_text(value, name, allow_none=False):
@@ -587,26 +605,58 @@ def split_words(text, language="en"):
     return [word.casefold() for word in text.split()]
 
 
-def keywords(text, language="en", stop_words=None):
-    """Get the top 10 keyword frequencies for text in the selected language.
+_KEYWORD_METHODS = ("frequency", "tfidf")
 
-    Stopwords are excluded before ranking.
+
+def keywords(text, language="en", stop_words=None, method="frequency"):
+    """Return up to ten keyword weights for text in the selected language.
+
+    ``method="frequency"`` ranks words by their share of the article, the
+    historical PyTeaser behavior. ``method="tfidf"`` additionally weights
+    each word by how selectively it is spread across the article's
+    sentences, downgrading words that appear everywhere. Stopwords are
+    excluded before ranking in both cases.
     """
     language = _normalize_language(language)
+    if method not in _KEYWORD_METHODS:
+        raise ValueError(f"Unsupported keyword scoring method: {method}")
     if stop_words is None:
         stop_words = _load_stop_words(language)
-    text = split_words(text, language)
-    numWords = len(text)  # of words before removing blacklist words
-    freq = Counter(x for x in text if x not in stop_words)
+    words = split_words(text, language)
+    freq = Counter(word for word in words if word not in stop_words)
+    if not freq:
+        return {}
 
-    minSize = min(10, len(freq))  # get first 10
-    top_keywords = dict(freq.most_common(minSize))
+    if method == "tfidf":
+        raw = _tfidf_keyword_weights(text, language, stop_words, words, freq)
+    else:
+        num_words = len(words)  # words before removing stopwords
+        raw = dict(freq.most_common(10))
+        raw = {term: count * 1.0 / num_words * 1.5 + 1 for term, count in raw.items()}
+    return raw
 
-    for k in top_keywords:
-        articleScore = top_keywords[k] * 1.0 / numWords
-        top_keywords[k] = articleScore * 1.5 + 1
 
-    return top_keywords
+def _tfidf_keyword_weights(text, language, stop_words, words, freq):
+    """Weight terms by frequency times a sentence-level inverse document frequency."""
+    documents = [
+        {word for word in split_words(sentence, language) if word not in stop_words}
+        for sentence in split_sentences(text)
+    ]
+    content_words = {word for word in words if word not in stop_words}
+    documents = [document for document in documents if document] or [content_words]
+
+    total = len(documents)
+    weights = {}
+    for term, count in freq.items():
+        document_frequency = sum(1 for document in documents if term in document)
+        idf = log((total + 1.0) / (document_frequency + 1.0)) + 1.0
+        weights[term] = count * idf
+
+    top = sorted(weights.items(), key=lambda item: item[1], reverse=True)[:10]
+    max_weight = top[0][1] if top else 0.0
+    if max_weight <= 0:
+        return {}
+    return {term: weight / max_weight * 1.5 + 1 for term, weight in top}
 
 
 def split_sentences(text):

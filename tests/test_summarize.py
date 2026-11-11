@@ -240,6 +240,46 @@ class TestSummarize(TestCase):
             ["Researchers confirmed several findings."],
         )
 
+    def test_tfidf_keyword_scoring_downweights_ubiquitous_terms(self):
+        text = (
+            "Reactor maintenance finished early. "
+            "Reactor tests passed. "
+            "Reactor output stabilized. "
+            "The crew replaced turbine housing, turbine blades, and turbine bearings."
+        )
+
+        frequency = keywords(text, method="frequency")
+        tfidf = keywords(text, method="tfidf")
+
+        self.assertEqual(frequency["reactor"], frequency["turbine"])
+        # same count, but "reactor" appears in every sentence, so a
+        # sentence-level IDF discounts it relative to "turbine"
+        self.assertGreater(tfidf["turbine"], tfidf["reactor"])
+        self.assertTrue(all(value >= 1.0 for value in tfidf.values()))
+
+    def test_tfidf_summaries_are_available_end_to_end(self):
+        text = " ".join(
+            [
+                "Aurora networks installed new fiber lines downtown.",
+                "Technicians verified the fiber connections last week.",
+                "The fiber rollout will finish in the autumn.",
+                "Aurora networks also sponsored the local stadium.",
+            ]
+        )
+
+        summary = summarize(
+            "Fiber rollout", text, sentence_count=2, keyword_scoring="tfidf"
+        )
+
+        self.assertEqual(len(summary), 2)
+        self.assertTrue(all(isinstance(sentence, str) for sentence in summary))
+
+    def test_unknown_keyword_scoring_method_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "keyword scoring"):
+            keywords("Some text.", method="nope")
+        with self.assertRaisesRegex(ValueError, "keyword scoring"):
+            summarize("Title", "Some text.", keyword_scoring="nope")
+
     def test_every_supported_language_has_stopwords(self):
         from pyteaser import _SUPPORTED_LANGUAGES, _load_stop_words
 
