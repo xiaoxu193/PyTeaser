@@ -37,6 +37,8 @@ jobs:
         run: ruff check .
       - name: Check formatting
         run: ruff format --check .
+      - name: Type check
+        run: python -m mypy
       - name: Check dependencies
         run: python -m pip check
 
