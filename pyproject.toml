@@ -47,7 +47,7 @@ images = ["Pillow>=10"]
 chinese = ["jieba>=0.42.1"]
 soup = ["beautifulsoup4>=4.12"]
 all = ["Pillow>=10", "jieba>=0.42.1", "beautifulsoup4>=4.12"]
-dev = ["ruff>=0.16,<1", "coverage>=7.6", "mypy>=1.13"]
+dev = ["ruff>=0.16,<1", "coverage>=7.6", "mypy>=2.4.1"]
 
 [project.scripts]
 pyteaser = "pyteaser:main"
